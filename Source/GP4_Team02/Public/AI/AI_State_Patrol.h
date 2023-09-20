@@ -15,7 +15,6 @@ class GP4_TEAM02_API UAI_State_Patrol : public UAI_StateBase
 
 private:
 	TObjectPtr<UTileBase> NextTile;
-	int16 iPatrolIndex = 0;
 	bool bIncrementIndex = true;
 
 	TObjectPtr<UTileBase> GetNextTile();

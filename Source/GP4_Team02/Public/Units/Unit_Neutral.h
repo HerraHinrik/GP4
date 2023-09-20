@@ -18,12 +18,15 @@ protected:
 
 	TObjectPtr<AUnitBase> TargetUnit = nullptr;
 	TArray<TObjectPtr<UTileBase>> PatrolArea;
-
+	
 	bool bFinishedMyTurn = false;
 	
 	virtual void BeginPlay() override;
 
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int iPatrolIndex = 0;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bCircularPatrol = false;
 
@@ -31,6 +34,7 @@ public:
 	void ExecuteCurrentState();
 	
 	TArray<TObjectPtr<UTileBase>> GetPatrolArea() const { return PatrolArea; }
+	
 
 	TObjectPtr<AUnitBase> GetTargetUnit() const { return TargetUnit; }
 

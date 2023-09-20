@@ -1,6 +1,9 @@
 
 
 #include "GameplaySystems/PlayerCursor.h"
+
+#include "GameBoard/GameBoardUtils.h"
+#include "GameBoard/Link.h"
 #include "GameplaySystems/PlayerInputController.h"
 #include "GameplaySystems/TWS_GameManager.h"
 #include "Units/UnitBase.h"
@@ -186,10 +189,23 @@ void APlayerCursor::UpdateHoveredTile()
 					if (HoveredTile)
 					{
 						HoveredTile->HoverTile(false);
+						for (TObjectPtr<ULink> Link : PathLinks)
+						{
+							Link->GetTarget()->HoverTile(false);
+						}
 					}
 					
 					HoveredTile = Tile;
 					HoveredTile->HoverTile(true);
+					if(SelectedUnit)
+					{
+						PathLinks = GameBoardUtils::FindPathInHexGrid(SelectedUnit->GetCurrentTile(), HoveredTile);
+					
+						for (TObjectPtr<ULink> Link : PathLinks)
+						{
+							Link->GetTarget()->HoverTile(true);
+						}
+					}
 					break;
 				}
 			}

@@ -44,7 +44,7 @@ void UAI_State_ChasePlayerUnit::OnStateRunning()
 		}
 		else
 		{
-			//Pathfind towards the target
+			AI_Unit->GetMoveAction()->StartAction(AI_Unit->GetTargetUnit()->GetCurrentTile(), AI_Unit);
 		}
 	}
 }

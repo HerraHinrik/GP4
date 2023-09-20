@@ -20,6 +20,9 @@ protected:
 	virtual void EndAction() override;
 
 private:
-	TObjectPtr<ULink> moveLink = nullptr;
+	TObjectPtr<ULink> MoveLink = nullptr;
+	TArray<TObjectPtr<ULink>> Path;
+
+	int32 iTilesMoved = 0;
 	
 };

@@ -23,7 +23,7 @@ protected:
 public:
 	void virtual OnConditionApplied(TObjectPtr<AUnitBase> unit, int duration, int potency);
 
-	void virtual OnConditionPersist();
+	bool virtual OnConditionPersist();
 
 	void virtual OnConditionRemoved();
 };

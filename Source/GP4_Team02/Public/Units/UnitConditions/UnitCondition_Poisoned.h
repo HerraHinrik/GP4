@@ -16,7 +16,7 @@ public:
 	
 	virtual void OnConditionApplied(TObjectPtr<AUnitBase> unit, int duration, int potency) override;
 
-	virtual void OnConditionPersist() override;
+	virtual bool OnConditionPersist() override;
 
 	virtual void OnConditionRemoved() override;
 };

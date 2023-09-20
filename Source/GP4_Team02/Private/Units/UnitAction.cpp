@@ -36,8 +36,8 @@ void UUnitAction::ExecuteAction()
 void UUnitAction::EndAction()
 {
 	Action_Unit->ConsumeActionPoints(iActionCost);
-	Action_Tile = NULL;
-	Action_Unit = NULL;
+	Action_Tile = nullptr;
+	Action_Unit = nullptr;
 	bCanPerformAction = true;
 	ActionTimer = 0.0f;
 	OnActionCompleted.Broadcast();

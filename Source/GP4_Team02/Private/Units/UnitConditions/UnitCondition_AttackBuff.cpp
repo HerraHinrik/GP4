@@ -16,9 +16,9 @@ void UUnitCondition_AttackBuff::OnConditionApplied(TObjectPtr<AUnitBase> unit, i
 		AffectedUnit->iAttackDamage += iPotency;
 }
 
-void UUnitCondition_AttackBuff::OnConditionPersist()
+bool UUnitCondition_AttackBuff::OnConditionPersist()
 {
-	Super::OnConditionPersist();
+	return Super::OnConditionPersist();
 }
 
 void UUnitCondition_AttackBuff::OnConditionRemoved()
