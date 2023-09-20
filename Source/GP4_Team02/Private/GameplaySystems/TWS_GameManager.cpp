@@ -224,12 +224,15 @@ void UTWS_GameManager::CoinFlip()
 
 void UTWS_GameManager::CheckForWin()
 {
-	for (const ATeam* Team : TeamArray)
+	for (const TObjectPtr<ATeam> Team : TeamArray)
 	{
-		if(Team->GetVictoryPoints() >= iVictoryPointsToWin)
+		if(const TObjectPtr<ATeam_PlayerControlled> PlayerTeam = Cast<ATeam_PlayerControlled>(Team))
 		{
-			OnGameEnded.Broadcast();
-			return;
+			if(PlayerTeam->GetVictoryPoints() >= iVictoryPointsToWin)
+			{
+				OnGameEnded.Broadcast();
+				return;
+			}
 		}
 	}
 }

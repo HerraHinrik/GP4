@@ -5,6 +5,7 @@
 #include "GameBoard/Tiles/HexTile_Creation.h"
 #include "GameBoard/Tiles/Tile_ClaimableHexTile.h"
 #include "GameBoard/Tiles/HexTile_Influence.h"
+#include "GameplaySystems/Team_PlayerControlled.h"
 #include "GameplaySystems/TWS_GameManager.h"
 #include "Units/UnitBase.h"
 
@@ -140,12 +141,15 @@ void AGameBoard::ConstructHexagonalTileGrid(int32 PlayerControlledTeamAmount, in
 		// Find all tiles adjacent to the corner tile
 		TArray<FHexCoordinates> AdjacentTiles = GameBoardUtils::GetAdjacentHexCoordinates( CornerHex, TilesCoordinates );
 		// Replace the tile type of the corner tile and its adjacent tiles with the creation tile type
-		TSubclassOf<UHexTile_Creation> CreationTileType = GameManager->GetTeamArray()[i]->GetCreationTileType();
-		if(CreationTileType == nullptr)
-			continue;
+		TObjectPtr<ATeam_PlayerControlled> PlayerTeam = Cast<ATeam_PlayerControlled>(GameManager->GetTeamArray()[i]);
+		if(!PlayerTeam) continue;
+		
+		TSubclassOf<UHexTile_Creation> CreationTileType = PlayerTeam->GetCreationTileType();
+		if(CreationTileType == nullptr) continue;
+		
 		TilesMap[CornerHex] = CreationTileType;
-		GameManager->GetTeamArray()[i]->AddCreationTileCoordinates( CornerHex );
-		GameManager->GetTeamArray()[i]->AppendCreationTileCoordinates( AdjacentTiles );
+		PlayerTeam->AddCreationTileCoordinates( CornerHex );
+		PlayerTeam->AppendCreationTileCoordinates( AdjacentTiles );
 
 		for (FHexCoordinates AdjacentTile : AdjacentTiles)
 		{
