@@ -65,6 +65,9 @@ public:
 	void SetGameBoardParent(const TObjectPtr<AGameBoard> GameBoard) { ParentGameBoard = GameBoard; }
 	TObjectPtr<AGameBoard> GetGameBoardParent() const { return ParentGameBoard; }
 
+	// Reset A* variables
+	void ResetAStarVariables() { ParentNode = nullptr; GCost = 0.0f; HCost = 0.0f; FCost = 0.0f; }
+
 	// Virtual Destructor
 	//virtual ~UTileBase() {}
 

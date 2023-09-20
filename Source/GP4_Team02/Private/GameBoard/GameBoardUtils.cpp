@@ -189,8 +189,11 @@ TArray<TObjectPtr<ULink>> GameBoardUtils::FindPathInHexGrid(const TObjectPtr<UHe
 	Open.Add(StartNode);
 
 	// Search for the end node
-	while (!Open.IsEmpty())
+	int32 Iterations = 0; // Sanity check
+	while (!Open.IsEmpty() && Iterations < 10000)
 	{
+		Iterations++;
+		
 		// Get the node with the lowest F cost
 		TObjectPtr<UHexTile> CurrentNode = Open[0];
 		for (TObjectPtr<UHexTile> OpenNode : Open)
@@ -215,15 +218,11 @@ TArray<TObjectPtr<ULink>> GameBoardUtils::FindPathInHexGrid(const TObjectPtr<UHe
 			// Reset A* values in all nodes
 			for (TObjectPtr<UHexTile> Node : Closed)
 			{
-				Node->ParentNode = nullptr;
-				Node->GCost = 0;
-				Node->HCost = 0;
+				Node->ResetAStarVariables();
 			}
 			for (UHexTile* HexTile : Open)
 			{
-				HexTile->ParentNode = nullptr;
-				HexTile->GCost = 0;
-				HexTile->HCost = 0;
+				HexTile->ResetAStarVariables();
 			}	
 			// Return the path
 			Algo::Reverse(Path);
