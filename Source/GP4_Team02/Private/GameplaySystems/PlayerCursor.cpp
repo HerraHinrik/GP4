@@ -109,7 +109,7 @@ void APlayerCursor::Test()
 
 void APlayerCursor::PerformAction()
 {
-	if (SelectedAction && SelectedUnit)
+	if (SelectedAction && SelectedUnit && SelectedTile)
 	{
 		SelectedAction->StartAction(SelectedTile, SelectedUnit);
 		SelectedAction = nullptr;
@@ -128,7 +128,10 @@ void APlayerCursor::SelectTarget()
 		return;	
 	}
 
-	if (SelectUnit(HoveredTile)) { return; }
+	if (!SelectedUnit || !SelectedUnit->GetSupportiveAction() || SelectedUnit->GetRemainingActionPoints() <= 0)
+	{
+		if (SelectUnit(HoveredTile)) { return; }
+	}
 
 	if (SelectTile(HoveredTile)) { return; }
 
