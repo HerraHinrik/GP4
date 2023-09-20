@@ -194,7 +194,8 @@ void APlayerCursor::UpdateHoveredTile()
 						HoveredTile->HoverTile(false);
 						for (TObjectPtr<ULink> Link : PathLinks)
 						{
-							Link->GetTarget()->HoverTile(false);
+							if(Link)
+								Link->GetTarget()->HoverTile(false);
 						}
 					}
 					
