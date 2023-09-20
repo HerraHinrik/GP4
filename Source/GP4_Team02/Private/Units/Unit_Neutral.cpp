@@ -66,6 +66,7 @@ TArray<TObjectPtr<UTileBase>> AUnit_Neutral::GetPartOfRing(TArray<TObjectPtr<UHe
 	if (!CurrentTile || ringIndex < 0)
 		return outArray;
 
+	//if inner-most ring, get entire ring
 	if (ringIndex == 0)
 	{
 		for (TObjectPtr<UHexTile> hex : ring)
@@ -79,11 +80,14 @@ TArray<TObjectPtr<UTileBase>> AUnit_Neutral::GetPartOfRing(TArray<TObjectPtr<UHe
 		int currentR = currentCoords.R;
 		for (TObjectPtr<UHexTile> hex : ring)
 		{
+			// multiply our current tile R-coord with each tile in the ring
+			// if the result is positive they are on the same half of the ring
 			int hexR = hex->GetHexCoordinates().R;
 			
 			if (currentR * hexR <= 0)
 				continue;
-			
+
+			//exclude player start tiles
 			if (hexR <= -ringIndex || hexR >= ringIndex)
 				outArray.Add(hex);
 		}
