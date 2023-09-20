@@ -23,6 +23,10 @@ protected:
 	
 	virtual void BeginPlay() override;
 
+	void SetupPatrolArea();
+
+	TArray<TObjectPtr<UTileBase>> GetPartOfRing(TArray<TObjectPtr<UHexTile>> ring, int ringIndex);
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int iPatrolIndex = 0;
