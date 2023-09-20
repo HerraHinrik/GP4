@@ -114,11 +114,6 @@ void UTileBase::SelectTile(bool bSelected)
 		if (GetOccupyingUnit()->GetTeam() != GetWorld()->GetSubsystem<UTWS_GameManager>()->GetCurrentTeam())
 			return;
 		TArray<UTileBase*> Neighbours;
-		GameBoardUtils::FindNodesWithinRadius(this, GetOccupyingUnit()->iAttackRange, Neighbours);
-		for (const UTileBase* Neighbour : Neighbours) 
-		{
-			Neighbour->OnNeighbour.Broadcast(true);
-		}
 	}
 
 }
