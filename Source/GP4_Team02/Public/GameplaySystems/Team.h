@@ -56,8 +56,6 @@ public:
 	
 public:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Team" )
-	bool bIsPlayerControlled = false;
-	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Team" )
 	FString TeamName = "NoName";
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Team" )
 	TArray<TSubclassOf<AUnitBase>> UnitTypes;

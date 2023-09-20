@@ -6,6 +6,7 @@
 #include "AI/AI_State_ChasePlayerUnit.h"
 #include "AI/AI_State_ReturnToPath.h"
 #include "GameplaySystems/Team.h"
+#include "GameplaySystems/Team_PlayerControlled.h"
 #include "Units/Unit_Neutral.h"
 
 TObjectPtr<UTileBase> UAI_State_Patrol::GetNextTile()
@@ -58,10 +59,13 @@ bool UAI_State_Patrol::CheckForEnemies()
 	//if one of the neighbouring tiles have a player-unit set it as the target
 	for (TObjectPtr<UTileBase> tile : neighbours)
 	{
-		if (tile->GetOccupyingUnit() && tile->GetOccupyingUnit()->GetTeam()->bIsPlayerControlled)
+		if (const TObjectPtr<AUnitBase> Unit = tile->GetOccupyingUnit(); Unit)
 		{
-			AI_Unit->SetNewTarget(tile->GetOccupyingUnit());
-			return true;
+			if(const TObjectPtr<ATeam_PlayerControlled> PlayerTeam = Cast<ATeam_PlayerControlled>(Unit->GetTeam()); PlayerTeam)
+			{
+				AI_Unit->SetNewTarget(tile->GetOccupyingUnit());
+				return true;
+			}
 		}
 	}
 
