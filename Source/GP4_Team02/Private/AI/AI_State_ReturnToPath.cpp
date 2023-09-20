@@ -18,13 +18,13 @@ void UAI_State_ReturnToPath::OnStateRunning()
 {
 	Super::OnStateRunning();
 
-	if (AI_Unit->GetPatrolArea().Contains(AI_Unit->GetCurrentTile()))
+	if (AI_Unit->GetCurrentTile() == AI_Unit->GetPatrolArea()[AI_Unit->iPatrolIndex])
 	{
 		Machine->PopTopState();
 	}
 	else
 	{
-		// pathfind back to patrol area
+		AI_Unit->GetMoveAction()->StartAction(AI_Unit->GetPatrolArea()[AI_Unit->iPatrolIndex], AI_Unit);
 	}
 }
 

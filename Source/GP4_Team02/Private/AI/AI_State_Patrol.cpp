@@ -22,23 +22,23 @@ TObjectPtr<UTileBase> UAI_State_Patrol::GetNextTile()
 	if (!AI_Unit->bCircularPatrol)
 	{
 		if (bIncrementIndex)
-			iPatrolIndex++;
+			AI_Unit->iPatrolIndex++;
 		else
-			iPatrolIndex--;
+			AI_Unit->iPatrolIndex--;
 
-		if (iPatrolIndex >= AI_Unit->GetPatrolArea().Num() - 1 || iPatrolIndex <= 0)
+		if (AI_Unit->iPatrolIndex >= AI_Unit->GetPatrolArea().Num() - 1 || AI_Unit->iPatrolIndex <= 0)
 		{
 			bIncrementIndex = !bIncrementIndex;
 		}
 	}
 	else
 	{
-		iPatrolIndex++;
-		if (iPatrolIndex >= AI_Unit->GetPatrolArea().Num())
-			iPatrolIndex = 0;
+		AI_Unit->iPatrolIndex++;
+		if (AI_Unit->iPatrolIndex >= AI_Unit->GetPatrolArea().Num())
+			AI_Unit->iPatrolIndex = 0;
 	}
 
-	if (TObjectPtr<UTileBase> outTile = AI_Unit->GetPatrolArea()[iPatrolIndex])
+	if (TObjectPtr<UTileBase> outTile = AI_Unit->GetPatrolArea()[AI_Unit->iPatrolIndex])
 		return outTile;
 
 	return nullptr;

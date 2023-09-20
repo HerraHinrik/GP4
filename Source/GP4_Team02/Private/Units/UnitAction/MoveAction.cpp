@@ -2,6 +2,7 @@
 #include "Units/UnitAction/MoveAction.h"
 
 #include "GameBoard/GameBoard.h"
+#include "GameBoard/GameBoardUtils.h"
 #include "Units/UnitBase.h"
 #include "GameBoard/Tiles/HexTile.h"
 #include "GameBoard/Link.h"
@@ -17,49 +18,66 @@ void UMoveAction::StartAction(UTileBase* tile, AUnitBase* unit)
 		return;
 	
 	//check link from current tile to target tile
-	UTileBase* startTile =  unit->GetCurrentTile();
-	if (!startTile)
+	UTileBase* StartTile =  unit->GetCurrentTile();
+	if (!StartTile)
 		return;
 
-	moveLink = startTile->GetLinkTo(tile);
-	if (!moveLink)
+	Path = GameBoardUtils::FindPathInHexGrid(StartTile, tile);
+	if (Path.Num() == 0)
 		return;
 
-	if (moveLink)
-	{
-		Action_TimerDelegate.BindUFunction(this, FName("ExecuteAction"));
-		GetWorld()->GetTimerManager().SetTimerForNextTick(Action_TimerDelegate);
-		//cache values
-		UUnitAction::StartAction(tile, unit);
-		
-	}
+	Action_TimerDelegate.BindUFunction(this, FName("ExecuteAction"));
+	GetWorld()->GetTimerManager().SetTimerForNextTick(Action_TimerDelegate);
+	//cache values
+	UUnitAction::StartAction(tile, unit);
 	
 }
 
 void UMoveAction::ExecuteAction()
 {
-	if ( ActionTimer < ActionTime )
+	// Get new movelink or end action if we have no action movelink
+	if( !MoveLink )
 	{
-		// Lerp world position towards target tile over the action time
-		const FVector NewLocation = FMath::Lerp(Action_Unit->GetActorLocation(), moveLink->GetTarget()->GetWorldLocation() + FVector(0,0,Action_Unit->fHeightOffset), ActionTimer / ActionTime);
-		Action_Unit->SetActorLocation(NewLocation);
-		ActionTimer += GetWorld()->GetDeltaSeconds();
-		GetWorld()->GetTimerManager().SetTimerForNextTick(Action_TimerDelegate);
+		if( Path.Num() > 0 && iTilesMoved * iActionCost < Action_Unit->GetRemainingActionPoints())
+		{
+			MoveLink = Path[0];
+			Path.RemoveAt(0);
+			GetWorld()->GetTimerManager().SetTimerForNextTick(Action_TimerDelegate);
+		}else
+		{
+			EndAction();
+			return;
+		}
 	}else
 	{
-		EndAction();
+		// Move unit towards links target tile
+		if ( ActionTimer < ActionTime )
+		{
+			// Lerp world position towards target tile over the action time
+			const FVector NewLocation = FMath::Lerp(Action_Unit->GetActorLocation(), MoveLink->GetTarget()->GetWorldLocation() + FVector(0,0,Action_Unit->fHeightOffset), ActionTimer / ActionTime);
+			Action_Unit->SetActorLocation(NewLocation);
+			ActionTimer += GetWorld()->GetDeltaSeconds();
+		}
+		else // Reset timer and place unit on target tile
+		{
+			AGameBoard::PlaceUnitOnTile( Action_Unit, MoveLink->GetTarget() );
+			MoveLink = nullptr;
+			ActionTimer = 0.0f;
+			iTilesMoved++;
+		}
+		GetWorld()->GetTimerManager().SetTimerForNextTick(Action_TimerDelegate);
 	}
 }
 
 void UMoveAction::EndAction()
 {
-	//move unit, set new current tile
-	if (Action_Unit && Action_Tile && moveLink)
-	{
-		AGameBoard::PlaceUnitOnTile( Action_Unit, Action_Tile );
-	}
 
+	const int32 iStoredActionCost = iActionCost;
+	iActionCost *= iTilesMoved;
 	//reset cached values
-	moveLink = nullptr;
+	MoveLink = nullptr;
+	Path.Empty();
 	UUnitAction::EndAction();
+	iActionCost = iStoredActionCost;
+	iTilesMoved = 0;
 }

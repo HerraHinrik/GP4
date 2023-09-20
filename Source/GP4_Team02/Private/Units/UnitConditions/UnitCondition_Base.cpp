@@ -13,16 +13,19 @@ void UUnitCondition_Base::OnConditionApplied(TObjectPtr<AUnitBase> unit, int dur
 	AffectedUnit = unit;
 }
 
-void UUnitCondition_Base::OnConditionPersist()
+bool UUnitCondition_Base::OnConditionPersist()
 {
 	iDuration--;
 	if (iDuration <= 0)
+	{
 		OnConditionRemoved();
+		return false;
+	}
+	return true;
 }
 
 void UUnitCondition_Base::OnConditionRemoved()
 {
-	AffectedUnit->RemoveCondition(this);
 	AffectedUnit = nullptr;
 	//destroy self? pool self?
 }

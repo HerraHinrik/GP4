@@ -5,6 +5,7 @@
 #include "TeamPawn.h"
 #include "PlayerCursor.generated.h"
 
+class ULink;
 class APlayerInputController;
 class AUnitBase;
 class UTileBase;
@@ -22,6 +23,7 @@ public:
 private:
 	TObjectPtr<APlayerInputController> Controller;
 	TObjectPtr<UTileBase> HoveredTile = nullptr;
+	TArray<TObjectPtr<ULink>> PathLinks;
 	// TObjectPtr<ATeam> myTeam;
 
 	void UpdateHoveredTile();

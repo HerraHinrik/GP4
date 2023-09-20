@@ -53,9 +53,29 @@ void AUnitBase::ResetUnit()
 
 void AUnitBase::UpdateConditions()
 {
+	TArray<TObjectPtr<UUnitCondition_Base>> persistingConditions;
 	for (TObjectPtr<UUnitCondition_Base> condition : Conditions)
 	{
-		condition->OnConditionPersist();
+		if (condition->OnConditionPersist())
+		{
+			persistingConditions.Add(condition);
+		}
+	}
+	Conditions = persistingConditions;
+}
+
+void AUnitBase::AddCondition(UUnitCondition_Base* condition, int duration, int potency)
+{
+	condition->OnConditionApplied(this, duration, potency);
+	Conditions.Add(condition);
+}
+
+void AUnitBase::RemoveCondition(UUnitCondition_Base* condition)
+{
+	if (Conditions.Contains(condition))
+	{
+		condition->OnConditionRemoved();
+		Conditions.Remove(condition);
 	}
 }
 
@@ -71,18 +91,6 @@ void AUnitBase::ChangeCurrentHealth(int change)
 
 	if (iCurrentHealth <= 0)
 		bIsAlive = false;
-}
-
-void AUnitBase::AddCondition(UUnitCondition_Base* condition, int duration, int potency)
-{
-	condition->OnConditionApplied(this, duration, potency);
-	Conditions.Add(condition);
-}
-
-void AUnitBase::RemoveCondition(UUnitCondition_Base* condition)
-{
-	if (Conditions.Contains(condition))
-		Conditions.Remove(condition);
 }
 
 void AUnitBase::ReceiveDamage(int amount)

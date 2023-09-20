@@ -14,10 +14,10 @@ void UUnitCondition_Poisoned::OnConditionApplied(TObjectPtr<AUnitBase> unit, int
 	Super::OnConditionApplied(unit, duration, potency);
 }
 
-void UUnitCondition_Poisoned::OnConditionPersist()
+bool UUnitCondition_Poisoned::OnConditionPersist()
 {
 	AffectedUnit->ReceiveDamage(iPotency);
-	Super::OnConditionPersist();
+	return Super::OnConditionPersist();
 }
 
 void UUnitCondition_Poisoned::OnConditionRemoved()

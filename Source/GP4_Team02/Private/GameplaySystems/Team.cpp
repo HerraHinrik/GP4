@@ -25,7 +25,7 @@ TObjectPtr<AUnitBase> ATeam::SpawnUnit(TSubclassOf<AUnitBase> UnitType)
 	
 	const TObjectPtr<AUnitBase> Unit = GetWorld()->SpawnActor<AUnitBase>(UnitType);
 	Unit->SetTeam(this);
-	Unit->OnUnitDeath.AddDynamic(this, &ATeam::RemoveDeadUnits);
+	//Unit->OnUnitDeath.AddDynamic(this, &ATeam::RemoveDeadUnits);
 	Units.Add(Unit);
 	OnUnitsChanged.Broadcast();
 
