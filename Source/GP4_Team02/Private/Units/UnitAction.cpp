@@ -15,7 +15,7 @@ void UUnitAction::StartAction(UTileBase* tile, AUnitBase* unit)
 	Action_Tile = tile;
 	Action_Unit = unit;
 	bCanPerformAction = false;
-	OnActionStarted.Broadcast();
+	OnActionStarted.Broadcast(tile);
 }
 
 FVector UUnitAction::GetActionTargetPosition()
