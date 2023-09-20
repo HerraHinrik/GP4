@@ -33,11 +33,13 @@ public:
 
 	// Set/Get Unit
 	void SetOccupyingUnit(AUnitBase* unit) { Unit = unit; }
+	UFUNCTION( BlueprintCallable, Category = "Tile" )
 	AUnitBase* GetOccupyingUnit() const { return Unit; }
 	// Remove Unit
 	void RemoveUnit() { Unit = nullptr; }
 
 	// Returns the World Location of the tile
+	UFUNCTION( BlueprintCallable, Category = "Tile" )
 	virtual FVector GetWorldLocation() { return GetComponentLocation();}
 	// Returns the World Rotation of the tile
 	virtual FRotator GetWorldRotation() { return GetComponentRotation();}
