@@ -8,7 +8,7 @@ class UTWS_GameManager;
 class AUnitBase;
 class UTileBase;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnActionStarted);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnActionStarted, UTileBase*, tile);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnActionCompleted);
 
 UCLASS(BlueprintType)
