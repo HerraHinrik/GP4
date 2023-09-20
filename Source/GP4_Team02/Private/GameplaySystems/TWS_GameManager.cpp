@@ -4,6 +4,8 @@
 #include "GameBoard/GameBoard.h"
 #include "GameplaySystems/PlayerInputController.h"
 #include "GameplaySystems/Team.h"
+#include "GameplaySystems/Team_AIControlled.h"
+#include "GameplaySystems/Team_PlayerControlled.h"
 #include "Kismet/GameplayStatics.h"
 #include "Units/UnitBase.h"
 
@@ -50,10 +52,11 @@ void UTWS_GameManager::	InitializeGame(TArray<TSubclassOf<ATeam>> TeamTypes)
 	{
 		// Spawn team and pass it to the appropriate setup function
 		const TObjectPtr<ATeam> Team = GetWorld()->SpawnActor<ATeam>(TeamType);
-		if(Team->bIsPlayerControlled)
+		// Try casting to player-controlled team
+		if(const TObjectPtr<ATeam_PlayerControlled> PlayerControlledTeam = Cast<ATeam_PlayerControlled>(Team); PlayerControlledTeam)
 		{
 			PlayerControlledTeamAmount++;
-		}else
+		}else if(const TObjectPtr<ATeam_AIControlled> AIControlledTeam = Cast<ATeam_AIControlled>(Team); AIControlledTeam)
 		{
 			AIControlledTeamAmount++;
 		}
@@ -189,9 +192,9 @@ void UTWS_GameManager::CoinFlip()
 	// Find and collect player-controlled teams
 	for (int32 i = 0; i < TeamArray.Num(); i++)
 	{
-		if (TeamArray[i]->bIsPlayerControlled)
+		if(const TObjectPtr<ATeam_PlayerControlled> PlayerControlledTeam = Cast<ATeam_PlayerControlled>(TeamArray[i]); PlayerControlledTeam)
 		{
-			PlayerControlledTeamsArray.Add(TeamArray[i]);
+			PlayerControlledTeamsArray.Add(PlayerControlledTeam);
 		}
 	}
 	
@@ -221,12 +224,15 @@ void UTWS_GameManager::CoinFlip()
 
 void UTWS_GameManager::CheckForWin()
 {
-	for (const ATeam* Team : TeamArray)
+	for (const TObjectPtr<ATeam> Team : TeamArray)
 	{
-		if(Team->GetVictoryPoints() >= iVictoryPointsToWin)
+		if(const TObjectPtr<ATeam_PlayerControlled> PlayerTeam = Cast<ATeam_PlayerControlled>(Team))
 		{
-			OnGameEnded.Broadcast();
-			return;
+			if(PlayerTeam->GetVictoryPoints() >= iVictoryPointsToWin)
+			{
+				OnGameEnded.Broadcast();
+				return;
+			}
 		}
 	}
 }
@@ -237,8 +243,7 @@ void UTWS_GameManager::AssignTeamToController(TObjectPtr<APlayerInputController>
 	
 	for (int16 i = 0; i < TeamArray.Num(); i++)
 	{
-		TObjectPtr<ATeam> team = TeamArray[i];
-		if (team->bIsPlayerControlled)
+		if(const TObjectPtr<ATeam_PlayerControlled> PlayerControlledTeam = Cast<ATeam_PlayerControlled>(TeamArray[i]); PlayerControlledTeam)
 		{
 			maxControllers++;
 		}
@@ -262,8 +267,7 @@ TObjectPtr<ATeam> UTWS_GameManager::AssignAITeam()
 	
 	for (int16 i = 0; i < TeamArray.Num(); i++)
 	{
-		TObjectPtr<ATeam> team = TeamArray[i];
-		if (!team->bIsPlayerControlled)
+		if(const TObjectPtr<ATeam_PlayerControlled> PlayerControlledTeam = Cast<ATeam_PlayerControlled>(TeamArray[i]); PlayerControlledTeam)
 		{
 			maxControllers++;
 		}

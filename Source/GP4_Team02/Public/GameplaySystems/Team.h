@@ -30,33 +30,15 @@ public:
 	TObjectPtr<AUnitBase> GetUnitAtIndex(const int UnitIndex) { return Units[UnitIndex]; }
 
 	// Spawn a unit of a specific type
-	TObjectPtr<AUnitBase> SpawnUnit(TSubclassOf<AUnitBase> UnitType);
+	virtual TObjectPtr<AUnitBase> SpawnUnit(TSubclassOf<AUnitBase> UnitType);
 	UFUNCTION( BlueprintCallable, Category = "Units")
-	AUnitBase* SpawnUnit(int32 UnitTier = 0);
+	virtual AUnitBase* SpawnUnit(int32 UnitTier = 0);
 
 	// Add/Remove a tile from the list of claimed tiles
 	void AddClaimedTile(const TObjectPtr<UTile_ClaimableHexTile> Tile) { ClaimedTiles.Add(Tile); }
 	void RemoveClaimedTile(const TObjectPtr<UTile_ClaimableHexTile> Tile) { ClaimedTiles.Remove(Tile); }
 
-	// Add/retrieve the creation tile/coordinates
-	void AddCreationTile(const TObjectPtr<UHexTile_Creation> Tile);
-	void AppendCreationTiles(const TArray<TObjectPtr<UHexTile_Creation>>& Tiles);
-	void AddCreationTileCoordinates(const FHexCoordinates& Coordinates);
-	void AppendCreationTileCoordinates(const TArray<FHexCoordinates>& Coordinates);
-	TArray<TObjectPtr<UHexTile_Creation>> GetCreationTiles() const { return CreationTiles; }
-	TArray<FHexCoordinates> GetCreationTileCoordinates() const { return CreationTileCoordinates; }
-
-	// Get CreationTileType
-	TSubclassOf<UHexTile_Creation> GetCreationTileType() const { return CreationTileType; }
-
-	// Add VictoryPoints
-	void AddVictoryPoints(const int32 Amount) { iVictoryPoints += Amount; OnVictoryPointsChanged.Broadcast(); }
-	// Get VictoryPoints
-	int32 GetVictoryPoints() const { return iVictoryPoints; }
-	
 public:
-	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Team" )
-	bool bIsPlayerControlled = false;
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Team" )
 	FString TeamName = "NoName";
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Team" )
@@ -84,16 +66,12 @@ public:
 protected:
 	TObjectPtr<UTWS_GameManager> GameManager;
 UFUNCTION()
-	void OnTurnChanged();
+	virtual void OnTurnChanged();
 	virtual void BeginPlay() override;
 	
 private:
 	void AllUnitsDead();
 	
 	TArray<TObjectPtr<AUnitBase>> UnitPool;
-	TArray<TObjectPtr<UHexTile_Creation>> CreationTiles;
-	TArray<FHexCoordinates> CreationTileCoordinates;
-	int32 iSpawnPoints;
-	int32 iVictoryPoints;
 };
 

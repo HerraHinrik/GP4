@@ -33,11 +33,13 @@ public:
 
 	// Set/Get Unit
 	void SetOccupyingUnit(AUnitBase* unit) { Unit = unit; }
+	UFUNCTION( BlueprintCallable, Category = "Tile" )
 	AUnitBase* GetOccupyingUnit() const { return Unit; }
 	// Remove Unit
 	void RemoveUnit() { Unit = nullptr; }
 
 	// Returns the World Location of the tile
+	UFUNCTION( BlueprintCallable, Category = "Tile" )
 	virtual FVector GetWorldLocation() { return GetComponentLocation();}
 	// Returns the World Rotation of the tile
 	virtual FRotator GetWorldRotation() { return GetComponentRotation();}
@@ -62,6 +64,9 @@ public:
 	// Set/Get Parent GameBoard
 	void SetGameBoardParent(const TObjectPtr<AGameBoard> GameBoard) { ParentGameBoard = GameBoard; }
 	TObjectPtr<AGameBoard> GetGameBoardParent() const { return ParentGameBoard; }
+
+	// Reset A* variables
+	void ResetAStarVariables() { ParentNode = nullptr; GCost = 0.0f; HCost = 0.0f; FCost = 0.0f; }
 
 	// Virtual Destructor
 	//virtual ~UTileBase() {}

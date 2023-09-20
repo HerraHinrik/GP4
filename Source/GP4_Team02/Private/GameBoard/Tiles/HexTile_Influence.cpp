@@ -3,9 +3,13 @@
 
 #include "GameBoard/Tiles/HexTile_Influence.h"
 #include "GameplaySystems/Team.h"
+#include "GameplaySystems/Team_PlayerControlled.h"
 
 void UHexTile_Influence::ClaimTile(TObjectPtr<ATeam> NewClaimingTeam)
 {
 	if(!NewClaimingTeam) return;
-	NewClaimingTeam->AddVictoryPoints(iVictoryPointAwarded);
+	if(const TObjectPtr<ATeam_PlayerControlled> PlayerTeam = Cast<ATeam_PlayerControlled>(NewClaimingTeam))
+	{
+		PlayerTeam->AddVictoryPoints(iVictoryPointAwarded);
+	}
 }
