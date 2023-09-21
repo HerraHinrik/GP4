@@ -17,7 +17,7 @@ void ATeamPawn::BeginPlay()
 	
 	GameManager = GetWorld()->GetSubsystem<UTWS_GameManager>();
 	
-	//GameManager->OnTurnChanged.AddDynamic(this, &ATeamPawn::CheckIfMyTurn);
+	GameManager->OnTurnChanged.AddDynamic(this, &ATeamPawn::CheckIfMyTurn);
 	
 }
 

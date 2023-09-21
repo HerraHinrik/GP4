@@ -29,7 +29,8 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	void virtual CheckIfMyTurn();
+	UFUNCTION()
+	virtual void CheckIfMyTurn();
 
 	UFUNCTION(BlueprintCallable)
 	void SetMyTurn(bool isMYTurn) { bIsMyTurn = isMYTurn; }

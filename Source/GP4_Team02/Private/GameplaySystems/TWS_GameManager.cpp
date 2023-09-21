@@ -137,7 +137,8 @@ void UTWS_GameManager::GameIntro(float DeltaTime)
 		{
 			bGameIntroTimerOn = false;
 			activeState = TurnState;
-			PawnsCheckTurn();
+			// PawnsCheckTurn();
+			OnTurnChanged.Broadcast();
 			bTurnTimerOn = true;
 			if(CurrentTeam)
 				GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, CurrentTeam->GetTeamName());
@@ -191,10 +192,8 @@ void UTWS_GameManager::ChangeTurn()
 		iRoundNumber++;
 	}
 	CurrentTeam = TeamArray[TeamIndex];
-	// iRemainingActionPoints = 4;
 
-	PawnsCheckTurn();
-
+	// PawnsCheckTurn();
 	OnTurnChanged.Broadcast();
 }
 

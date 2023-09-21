@@ -28,9 +28,6 @@ private:
 
 	void UpdateHoveredTile();
 
-	
-
-
 #pragma region SelectAction
 	TObjectPtr<AUnitBase> SelectedUnit  = nullptr;
 	TObjectPtr<UTileBase> SelectedTile = nullptr;
