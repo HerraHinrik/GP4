@@ -178,6 +178,8 @@ TArray<TObjectPtr<ULink>> GameBoardUtils::FindPathInHexGrid(const TObjectPtr<UHe
 
 	// Early out if either start and end are null or if they are the same or if the node tiles array is empty
 	if (StartNode == nullptr || EndNode == nullptr || StartNode == EndNode ) return Path;
+	// Skip out if the end node is occupied
+	if (EndNode->GetOccupyingUnit()) return Path;
 
 	// Create Closed and Open
 	TSet<TObjectPtr<UHexTile>> Closed;
