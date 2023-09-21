@@ -84,6 +84,7 @@ private:
 	void ToggleController(APlayerController controller, bool setOn);
 	void ChangeState();
 	void ChangeTurn();
+	void PawnsCheckTurn();
 	
 	virtual void Tick(float DeltaTime) override;
 	virtual void OnWorldBeginPlay(UWorld& InWorld) override;

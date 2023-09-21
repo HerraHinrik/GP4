@@ -25,11 +25,7 @@ void UTWS_GameManager::Tick(float DeltaTime)
 	TurnTimer(DeltaTime);
 }
 
-void UTWS_GameManager::EndTurn()
-{
-	if (activeState == TurnState)
-		ChangeState();
-}
+#pragma region GameSetup
 
 void UTWS_GameManager::	InitializeGame(TArray<TSubclassOf<ATeam>> TeamTypes)
 {
@@ -79,107 +75,12 @@ void UTWS_GameManager::	InitializeGame(TArray<TSubclassOf<ATeam>> TeamTypes)
 	CoinFlip();
 }
 
-void UTWS_GameManager::ChangeState()
-{
-	switch (activeState)
-	{
-	case TurnState:
-		bTurnTimerOn = false;
-		fTurnRemainingTime = fBetweenMaxTime;
-		activeState = BetweenState;
-		ChangeTurn();
-		bTurnTimerOn = true;
-		break;
-	case BetweenState:
-		bTurnTimerOn = false;
-		fTurnRemainingTime = fTurnMaxTime;
-		for (TObjectPtr<AUnitBase> Unit : CurrentTeam->GetUnits())
-		{
-			Unit->ResetUnit();
-		}
-		activeState = TurnState;
-		bTurnTimerOn = true;
-		break;
-	default:
-		break;
-	}
-}
-
-void UTWS_GameManager::ChangeTurn()
-{
-	//do we only have one (or zero) teams?
-	if (TeamArray.Num() < 2)
-		return;
-
-
-	//increment the index and set new active team
-	TeamIndex++;
-	
-	if (TeamIndex >= TeamArray.Num())
-	{
-		TeamIndex = 0;
-		iRoundNumber++;
-	}
-	CurrentTeam = TeamArray[TeamIndex];
-	// iRemainingActionPoints = 4;
-
-	for (TObjectPtr<ATeamPawn> team : TeamPawns)
-	{
-		team->CheckIfMyTurn();
-	}
-	OnTurnChanged.Broadcast();
-}
-
-
-void UTWS_GameManager::GameIntro(float DeltaTime)
-{
-	if (bGameIntroTimerOn)
-	{
-		fGameIntroTimer -= DeltaTime;
-		if (fGameIntroTimer <= 0)
-		{
-			bGameIntroTimerOn = false;
-			activeState = TurnState;
-			bTurnTimerOn = true;
-			if(CurrentTeam)
-				GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, CurrentTeam->GetTeamName());
-		}
-	}
-}
-
-void UTWS_GameManager::TurnTimer(float DeltaTime)
-{
-	if (bTurnTimerOn)
-	{
-		fTurnRemainingTime -= DeltaTime;
-		if (fTurnRemainingTime <= 0)
-		{
-			ChangeState();
-		}
-	}
-}
-
-
-void UTWS_GameManager::ToggleController(APlayerController controller, bool setOn)
-{
-	//if setOn is true, enable all inputs
-	if (setOn)
-	{
-		controller.SetInputMode(GameAndUIInputs);
-	}
-	else
-	{
-		controller.SetInputMode(UIInputs);
-	}
-}
-
 void UTWS_GameManager::CoinFlip()
 {
 	// If there are no teams, return
 	if(TeamArray.IsEmpty())
 		return;
-
-
+	
 
 	// Shuffle the array
 	const int32 LastIndex = TeamArray.Num() - 1;
@@ -227,6 +128,105 @@ void UTWS_GameManager::CoinFlip()
 	CurrentTeam = TeamArray[0];
 }
 
+void UTWS_GameManager::GameIntro(float DeltaTime)
+{
+	if (bGameIntroTimerOn)
+	{
+		fGameIntroTimer -= DeltaTime;
+		if (fGameIntroTimer <= 0)
+		{
+			bGameIntroTimerOn = false;
+			activeState = TurnState;
+			PawnsCheckTurn();
+			bTurnTimerOn = true;
+			if(CurrentTeam)
+				GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, CurrentTeam->GetTeamName());
+		}
+	}
+}
+
+#pragma endregion 
+
+#pragma region TurnManagement
+
+void UTWS_GameManager::ChangeState()
+{
+	switch (activeState)
+	{
+	case TurnState:
+		bTurnTimerOn = false;
+		fTurnRemainingTime = fBetweenMaxTime;
+		activeState = BetweenState;
+		ChangeTurn();
+		bTurnTimerOn = true;
+		break;
+	case BetweenState:
+		bTurnTimerOn = false;
+		fTurnRemainingTime = fTurnMaxTime;
+		for (TObjectPtr<AUnitBase> Unit : CurrentTeam->GetUnits())
+		{
+			Unit->ResetUnit();
+		}
+		activeState = TurnState;
+		bTurnTimerOn = true;
+		break;
+	default:
+		break;
+	}
+}
+
+void UTWS_GameManager::ChangeTurn()
+{
+	//do we only have one (or zero) teams?
+	if (TeamArray.Num() < 2)
+		return;
+
+
+	//increment the index and set new active team
+	TeamIndex++;
+	
+	if (TeamIndex >= TeamArray.Num())
+	{
+		TeamIndex = 0;
+		iRoundNumber++;
+	}
+	CurrentTeam = TeamArray[TeamIndex];
+	// iRemainingActionPoints = 4;
+
+	PawnsCheckTurn();
+
+	OnTurnChanged.Broadcast();
+}
+
+void UTWS_GameManager::PawnsCheckTurn()
+{
+	if (TeamPawns.IsEmpty())
+		return;
+	
+	for (TObjectPtr<ATeamPawn> team : TeamPawns)
+	{
+		team->CheckIfMyTurn();
+	}
+}
+
+void UTWS_GameManager::TurnTimer(float DeltaTime)
+{
+	if (bTurnTimerOn)
+	{
+		fTurnRemainingTime -= DeltaTime;
+		if (fTurnRemainingTime <= 0)
+		{
+			ChangeState();
+		}
+	}
+}
+
+void UTWS_GameManager::EndTurn()
+{
+	if (activeState == TurnState)
+		ChangeState();
+}
+
 void UTWS_GameManager::CheckForWin()
 {
 	for (const TObjectPtr<ATeam> Team : TeamArray)
@@ -241,6 +241,8 @@ void UTWS_GameManager::CheckForWin()
 		}
 	}
 }
+
+#pragma endregion 
 
 void UTWS_GameManager::AssignTeamToController(TObjectPtr<APlayerInputController> controller)
 {
@@ -296,5 +298,19 @@ void UTWS_GameManager::AddPawnToArray(TObjectPtr<ATeamPawn> pawn)
 	if (pawn)
 	{
 		TeamPawns.Add(pawn);
+	}
+}
+
+
+void UTWS_GameManager::ToggleController(APlayerController controller, bool setOn)
+{
+	//if setOn is true, enable all inputs
+	if (setOn)
+	{
+		controller.SetInputMode(GameAndUIInputs);
+	}
+	else
+	{
+		controller.SetInputMode(UIInputs);
 	}
 }
