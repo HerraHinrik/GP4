@@ -18,6 +18,6 @@ public:
 	virtual void ClaimTile(TObjectPtr<ATeam> NewClaimingTeam);
 	TObjectPtr<ATeam> GetClaimingTeam() const { return ClaimingTeam; }
 	
-private:
+protected:
 	TObjectPtr<ATeam> ClaimingTeam;
 };

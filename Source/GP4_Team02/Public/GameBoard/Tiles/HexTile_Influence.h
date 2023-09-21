@@ -17,6 +17,13 @@ class GP4_TEAM02_API UHexTile_Influence : public UTile_ClaimableHexTile
 public:
 	virtual void ClaimTile(TObjectPtr<ATeam> NewClaimingTeam) override;
 
+protected:
+	virtual void BeginPlay() override;
+
+private:
+	UFUNCTION()
+	void ResetTile();
+
 public:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Influence" )
 	int32 iVictoryPointAwarded = 1;
