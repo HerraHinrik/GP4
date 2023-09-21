@@ -28,6 +28,11 @@ class GP4_TEAM02_API ATeam_AIControlled : public ATeam
 {
 	GENERATED_BODY()
 public:
+	virtual TObjectPtr<AUnitBase> SpawnUnit(TSubclassOf<AUnitBase> UnitType) override;
+	virtual AUnitBase* SpawnUnit(int32 UnitTier) override;
+	virtual TArray<TObjectPtr<AUnitBase>> SpawnStartUnits() override;
+
+public:
 	// Tuple of UnitType and SpawnLocation
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Units" )
 	TArray<FUnitAndSpawnCoordinatesPair> UnitSpawnPair;

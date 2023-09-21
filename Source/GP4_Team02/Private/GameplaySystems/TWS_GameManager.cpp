@@ -65,10 +65,9 @@ void UTWS_GameManager::	InitializeGame(TArray<TSubclassOf<ATeam>> TeamTypes)
 	GameBoard->ConstructTileGrid(PlayerControlledTeamAmount, AIControlledTeamAmount);
 
 	// Place units on board
-	for (TObjectPtr<ATeam> Team : TeamArray)
+	for (const TObjectPtr<ATeam> Team : TeamArray)
 	{
-		for( int32 i = 0; i < Team->iUnitStartAmount; i++)
-			Team->SpawnUnit();
+		Team->SpawnStartUnits();
 	}
 	
 	// Set current team

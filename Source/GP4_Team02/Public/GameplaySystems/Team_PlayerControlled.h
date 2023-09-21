@@ -14,10 +14,14 @@ class GP4_TEAM02_API ATeam_PlayerControlled : public ATeam
 {
 	GENERATED_BODY()
 public:
-	void BeginPlay();
+	virtual void BeginPlay() override;
+	virtual void OnTurnChanged() override;
+	
+	// Spawn Functions
 	virtual TObjectPtr<AUnitBase> SpawnUnit(TSubclassOf<AUnitBase> UnitType) override;
 	virtual AUnitBase* SpawnUnit(int32 UnitTier) override;
-	void OnTurnChanged();
+	virtual TArray<TObjectPtr<AUnitBase>> SpawnStartUnits() override;
+
 
 	// Add/retrieve the creation tile/coordinates
 	void AddCreationTile(const TObjectPtr<UHexTile_Creation> Tile);
@@ -34,8 +38,6 @@ public:
 	void AddVictoryPoints(const int32 Amount) { iVictoryPoints += Amount; OnVictoryPointsChanged.Broadcast(); }
 	// Get VictoryPoints
 	int32 GetVictoryPoints() const { return iVictoryPoints; }
-	
-
 
 private:
 	TArray<TObjectPtr<UHexTile_Creation>> CreationTiles;
