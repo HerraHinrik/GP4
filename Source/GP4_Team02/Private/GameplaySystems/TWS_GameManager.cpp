@@ -73,6 +73,8 @@ void UTWS_GameManager::	InitializeGame(TArray<TSubclassOf<ATeam>> TeamTypes)
 	
 	// Set current team
 	CoinFlip();
+
+	OnGameReady.Broadcast();
 }
 
 void UTWS_GameManager::CoinFlip()
@@ -142,6 +144,7 @@ void UTWS_GameManager::GameIntro(float DeltaTime)
 			bTurnTimerOn = true;
 			if(CurrentTeam)
 				GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, CurrentTeam->GetTeamName());
+			OnGameStart.Broadcast();
 		}
 	}
 }

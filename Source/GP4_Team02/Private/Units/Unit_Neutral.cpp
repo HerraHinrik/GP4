@@ -7,6 +7,7 @@
 #include "AI/AI_State_Patrol.h"
 #include "GameBoard/GameBoardUtils.h"
 #include "GameBoard/Tiles/HexTile.h"
+#include "GameplaySystems/TWS_GameManager.h"
 
 
 void AUnit_Neutral::BeginPlay()
@@ -18,11 +19,11 @@ void AUnit_Neutral::BeginPlay()
 	if (StateMachine)
 	{
 		TObjectPtr<UAI_State_Patrol> patrolState = NewObject<UAI_State_Patrol>();
+		patrolState->SetAIUnit(this);
 		StateMachine->StateStack.Add(patrolState);
 	}
 
-	//SetupPatrolArea();
-	
+	GetWorld()->GetSubsystem<UTWS_GameManager>()->OnGameReady.AddDynamic(this, &AUnit_Neutral::SetupPatrolArea);
 }
 
 void AUnit_Neutral::SetupPatrolArea()

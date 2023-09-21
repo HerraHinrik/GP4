@@ -36,7 +36,6 @@ void AAI_Pawn::CheckIfMyTurn()
 	if (bIsMyTurn)
 	{
 		StackMyUnits();
-		bCanAct = true;
 	}
 	else
 	{
@@ -53,12 +52,22 @@ void AAI_Pawn::PerformUnitAction()
 void AAI_Pawn::ExecuteTurn(float DeltaSeconds)
 {
 	if (TurnStack.IsEmpty())
-		GameManager->EndTurn();
+	{
+		if(!ActiveUnit || (ActiveUnit && ActiveUnit->GetFinishedMyTurn()))
+		{
+			GameManager->EndTurn();
+			bCanAct = false;
+			return;
+		}
+	}
 	
 	if (!ActiveUnit || ActiveUnit->GetFinishedMyTurn())
 	{
 		if (!TurnStack.IsEmpty())
+		{
 			ActiveUnit = TurnStack.Pop();
+			GEngine->AddOnScreenDebugMessage( -1, 10.f, FColor::Red, "New Unit" );
+		}
 	}
 
 	if (ActiveUnit)
@@ -77,10 +86,13 @@ void AAI_Pawn::WaitAndAct(float DeltaSeconds)
 void AAI_Pawn::StackMyUnits()
 {
 	TurnStack.Empty();
-	for (TObjectPtr<AUnitBase> unit : myTeam->GetUnits())
+	int32 loops = myTeam->GetUnits().Num();
+	for (int32 i = 0; i < loops; ++i)
 	{
-		TObjectPtr<AUnit_Neutral> neutralUnit = Cast<AUnit_Neutral>(unit);
+		TObjectPtr<AUnit_Neutral> neutralUnit = Cast<AUnit_Neutral>(myTeam->GetUnits()[i]);
 		if (neutralUnit)
 			TurnStack.Add(neutralUnit);
 	}
+	bCanAct = true;
+
 }

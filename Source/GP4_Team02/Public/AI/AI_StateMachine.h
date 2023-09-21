@@ -16,9 +16,11 @@ class GP4_TEAM02_API UAI_StateMachine : public UObject
 	GENERATED_BODY()
 
 private:
+	UPROPERTY()
 	TObjectPtr<AUnit_Neutral> AI_Unit;
 	
 public:
+	UPROPERTY()
 	TArray<TObjectPtr<UAI_StateBase>> StateStack;
 
 	TObjectPtr<UAI_StateBase> GetCurrentState() const

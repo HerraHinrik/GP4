@@ -85,7 +85,7 @@ void UAI_State_Patrol::OnStateRunning()
 {
 	Super::OnStateRunning();
 
-	if (AI_Unit->GetPatrolArea().IsEmpty())
+	if (AI_Unit->GetPatrolArea().IsEmpty() || AI_Unit->GetPatrolArea().Num() <= 0)
 	{
 		AI_Unit->bFinishedMyTurn = true;
 		return;
@@ -113,7 +113,8 @@ void UAI_State_Patrol::OnStateRunning()
 	{
 		AI_Unit->GetMoveAction()->StartAction(GetNextTile(), AI_Unit);
 	}
-	
+	GEngine->AddOnScreenDebugMessage( -1, 10.f, FColor::Blue, "Patrol" );
+	AI_Unit->bFinishedMyTurn = true;
 }
 
 void UAI_State_Patrol::OnStateExit()

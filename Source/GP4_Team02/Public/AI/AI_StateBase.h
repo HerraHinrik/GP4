@@ -22,6 +22,8 @@ public:
 	void virtual OnStateRunning();
 	void virtual OnStateExit();
 
+	void SetAIUnit(const TObjectPtr<AUnit_Neutral> Unit) { AI_Unit = Unit; }
+
 	void SetMachine(TObjectPtr<UAI_StateMachine> machine) { Machine = machine; }
 	TObjectPtr<UAI_StateMachine> GetMachine() const { return Machine; }
 };
