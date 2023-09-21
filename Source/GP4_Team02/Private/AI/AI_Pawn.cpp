@@ -11,9 +11,7 @@ void AAI_Pawn::BeginPlay()
 
 	myTeam = GameManager->AssignAITeam();
 	GameManager->AddPawnToArray(this);
-
-	GameManager->OnTurnChanged.AddDynamic(this, &AAI_Pawn::CheckIfMyTurn);
-
+	
 }
 
 void AAI_Pawn::Tick(float DeltaSeconds)
