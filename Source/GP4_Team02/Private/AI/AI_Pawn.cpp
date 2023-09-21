@@ -10,6 +10,7 @@ void AAI_Pawn::BeginPlay()
 	Super::BeginPlay();
 
 	myTeam = GameManager->AssignAITeam();
+	GameManager->AddPawnToArray(this);
 
 	GameManager->OnTurnChanged.AddDynamic(this, &AAI_Pawn::CheckIfMyTurn);
 
