@@ -21,7 +21,7 @@ void AUnit_Neutral::BeginPlay()
 		StateMachine->GetStateStack().Add(patrolState);
 	}
 
-	SetupPatrolArea();
+	//SetupPatrolArea();
 	
 
 	
@@ -122,7 +122,15 @@ bool AUnit_Neutral::CheckTargetInRange()
 
 void AUnit_Neutral::ExecuteCurrentState()
 {
-	StateMachine->GetCurrentState()->OnStateRunning();
+	TObjectPtr<UAI_StateBase> state = StateMachine->GetCurrentState();
+	if (state)
+	{
+		state->OnStateRunning();
+	}
+	else
+	{
+		bFinishedMyTurn = true;
+	}
 
 	if (iUnitActionPoints <= 0)
 	{

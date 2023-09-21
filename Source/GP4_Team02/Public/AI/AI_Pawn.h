@@ -15,9 +15,9 @@ class GP4_TEAM02_API AAI_Pawn : public ATeamPawn
 
 private:
 	float fDelayTimer;
-	bool bCanAct = true;
+	bool bCanAct = false;
 
-	TObjectPtr<ATeam> AI_Team;
+	// TObjectPtr<ATeam> AI_Team;
 	TArray<TObjectPtr<AUnit_Neutral>> TurnStack;
 	TObjectPtr<AUnit_Neutral> ActiveUnit;
 	

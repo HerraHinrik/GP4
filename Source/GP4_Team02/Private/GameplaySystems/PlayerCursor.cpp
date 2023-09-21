@@ -143,9 +143,15 @@ void APlayerCursor::DeselectTarget()
 
 void APlayerCursor::ClaimTile()
 {
-	if (bIsMyTurn && SelectedUnit)
+	if (!bIsMyTurn || !SelectedUnit)
+		return;
+
+	if (TObjectPtr<UClaimTileAction> claimAction = SelectedUnit->GetClaimTileAction() )
 	{
-		//CLAIM TILE ACTION !!
+		if (SelectedUnit->CanAffordAction(claimAction->iActionCost))
+		{
+			claimAction->StartAction(SelectedUnit->GetCurrentTile(), SelectedUnit);
+		}
 	}
 }
 

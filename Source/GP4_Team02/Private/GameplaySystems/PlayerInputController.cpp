@@ -63,6 +63,7 @@ void APlayerInputController::SetupPlayerInputComponent()
 		EnhancedInputComponent->BindAction(MoveCursorAction, ETriggerEvent::Triggered, this, &APlayerInputController::MoveCursor);
 		EnhancedInputComponent->BindAction(SelectAction, ETriggerEvent::Completed, this, &APlayerInputController::Select);
 		EnhancedInputComponent->BindAction(DeselectAction, ETriggerEvent::Completed, this, &APlayerInputController::Deselect);
+		EnhancedInputComponent->BindAction(ToggleMenuAction, ETriggerEvent::Completed, this, &APlayerInputController::ClaimTile);
 		EnhancedInputComponent->BindAction(InfoAction, ETriggerEvent::Completed, this, &APlayerInputController::Info);
 		EnhancedInputComponent->BindAction(ToggleMenuAction, ETriggerEvent::Completed, this, &APlayerInputController::ToggleMenu);
 	}

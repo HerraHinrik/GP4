@@ -18,7 +18,7 @@ void AAI_Pawn::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	if (bIsMyTurn)
+	if (bCanAct)
 	{
 		ExecuteTurn(DeltaSeconds);
 	}
@@ -26,11 +26,21 @@ void AAI_Pawn::Tick(float DeltaSeconds)
 
 void AAI_Pawn::CheckIfMyTurn()
 {
+	if (!myTeam)
+	{
+		myTeam = GameManager->AssignAITeam();
+	}
+	
 	Super::CheckIfMyTurn();
 
 	if (bIsMyTurn)
 	{
 		StackMyUnits();
+		bCanAct = true;
+	}
+	else
+	{
+		bCanAct = false;
 	}
 }
 
@@ -38,7 +48,6 @@ void AAI_Pawn::PerformUnitAction()
 {
 	fDelayTimer = fDelayBetweenActions;
 	ActiveUnit->ExecuteCurrentState();
-
 }
 
 void AAI_Pawn::ExecuteTurn(float DeltaSeconds)
@@ -68,7 +77,7 @@ void AAI_Pawn::WaitAndAct(float DeltaSeconds)
 void AAI_Pawn::StackMyUnits()
 {
 	TurnStack.Empty();
-	for (TObjectPtr<AUnitBase> unit : AI_Team->GetUnits())
+	for (TObjectPtr<AUnitBase> unit : myTeam->GetUnits())
 	{
 		TObjectPtr<AUnit_Neutral> neutralUnit = Cast<AUnit_Neutral>(unit);
 		if (neutralUnit)

@@ -19,7 +19,6 @@ protected:
 	TObjectPtr<AUnitBase> TargetUnit = nullptr;
 	TArray<TObjectPtr<UTileBase>> PatrolArea;
 	
-	bool bFinishedMyTurn = false;
 	
 	virtual void BeginPlay() override;
 
@@ -28,6 +27,8 @@ protected:
 	TArray<TObjectPtr<UTileBase>> GetPartOfRing(TArray<TObjectPtr<UHexTile>> ring, int ringIndex);
 
 public:
+	bool bFinishedMyTurn = false;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int iPatrolIndex = 0;
 	

@@ -24,7 +24,12 @@ public:
 	{
 		if (!StateStack.IsEmpty())
 		{
-			return StateStack.Last();
+			TObjectPtr<UAI_StateBase> state = StateStack.Last();
+			if (state)
+			{
+				return state;
+			}
+			
 		}
 		return nullptr;
 	}

@@ -53,7 +53,8 @@ void UTWS_GameManager::	InitializeGame(TArray<TSubclassOf<ATeam>> TeamTypes)
 		if(const TObjectPtr<ATeam_PlayerControlled> PlayerControlledTeam = Cast<ATeam_PlayerControlled>(Team); PlayerControlledTeam)
 		{
 			PlayerControlledTeamAmount++;
-		}else if(const TObjectPtr<ATeam_AIControlled> AIControlledTeam = Cast<ATeam_AIControlled>(Team); AIControlledTeam)
+		}
+		else if(const TObjectPtr<ATeam_AIControlled> AIControlledTeam = Cast<ATeam_AIControlled>(Team); AIControlledTeam)
 		{
 			AIControlledTeamAmount++;
 		}
@@ -267,27 +268,13 @@ void UTWS_GameManager::AssignTeamToController(TObjectPtr<APlayerInputController>
 
 TObjectPtr<ATeam> UTWS_GameManager::AssignAITeam()
 {
-	TObjectPtr<ATeam> outTeam = nullptr;
-	int maxControllers = 0;
+	TObjectPtr<ATeam_AIControlled> outTeam = Cast<ATeam_AIControlled>(TeamArray.Last());
+
+	if (!outTeam)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "No AI Team");
+	}
 	
-	for (int16 i = 0; i < TeamArray.Num(); i++)
-	{
-		if(const TObjectPtr<ATeam_PlayerControlled> PlayerControlledTeam = Cast<ATeam_PlayerControlled>(TeamArray[i]); PlayerControlledTeam)
-		{
-			maxControllers++;
-		}
-		else
-		{
-			break;
-		}
-	}
-
-	if (AIControllerIndex < maxControllers)
-	{
-		outTeam = TeamArray[AIControllerIndex];
-		AIControllerIndex++;
-	}
-
 	return outTeam;
 }
 
