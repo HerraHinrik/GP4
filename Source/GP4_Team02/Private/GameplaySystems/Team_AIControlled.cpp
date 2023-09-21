@@ -32,7 +32,6 @@ TArray<TObjectPtr<AUnitBase>> ATeam_AIControlled::SpawnStartUnits()
 		SpawnedUnits.Add(Unit);
 		if(const TObjectPtr<UHexTile> Tile = GameBoardUtils::FindNodeByHexCoordinates(Pair.HexCoordinates, NodeTiles))
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, "Spawned unit on tile");
 			AGameBoard::PlaceUnitOnTile(Unit, Tile);
 		}
 	}
