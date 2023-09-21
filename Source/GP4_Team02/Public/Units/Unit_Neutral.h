@@ -22,6 +22,7 @@ protected:
 	
 	virtual void BeginPlay() override;
 
+	UFUNCTION()
 	void SetupPatrolArea();
 
 	TArray<TObjectPtr<UTileBase>> GetPartOfRing(TArray<TObjectPtr<UHexTile>> ring, int ringIndex);
