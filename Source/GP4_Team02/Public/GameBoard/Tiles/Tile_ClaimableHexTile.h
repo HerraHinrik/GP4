@@ -16,7 +16,8 @@ class GP4_TEAM02_API UTile_ClaimableHexTile : public UHexTile
 	GENERATED_BODY()
 public:
 	virtual void ClaimTile(TObjectPtr<ATeam> NewClaimingTeam);
+	TObjectPtr<ATeam> GetClaimingTeam() const { return ClaimingTeam; }
 	
-private:
+protected:
 	TObjectPtr<ATeam> ClaimingTeam;
 };

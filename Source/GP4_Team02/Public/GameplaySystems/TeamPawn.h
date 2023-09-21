@@ -21,7 +21,6 @@ protected:
 	TObjectPtr<ATeam> myTeam;
 	TObjectPtr<UTWS_GameManager> GameManager;
 
-	void virtual CheckIfMyTurn();
 	
 	virtual void BeginPlay() override;
 
@@ -29,6 +28,9 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	UFUNCTION()
+	virtual void CheckIfMyTurn();
 
 	UFUNCTION(BlueprintCallable)
 	void SetMyTurn(bool isMYTurn) { bIsMyTurn = isMYTurn; }

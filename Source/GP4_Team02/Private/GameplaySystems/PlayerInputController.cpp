@@ -23,6 +23,11 @@ void APlayerInputController::BeginPlay()
 	this->Possess(SpawnedCursor);
 	
 	Cursor = Cast<APlayerCursor>(GetPawn());
+	if (Cursor)
+	{
+		GetWorld()->GetSubsystem<UTWS_GameManager>()->AddPawnToArray(Cursor);
+	}
+	
 	if (!SpawnedCursor || !GetPawn())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("No cursor!"));
@@ -91,6 +96,14 @@ void APlayerInputController::Deselect()
 	if (Cursor)
 	{
 		Cursor->DeselectTarget();
+	}
+}
+
+void APlayerInputController::ClaimTile()
+{
+	if (Cursor)
+	{
+		Cursor->ClaimTile();
 	}
 }
 

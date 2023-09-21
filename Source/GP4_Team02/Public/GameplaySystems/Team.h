@@ -33,6 +33,7 @@ public:
 	virtual TObjectPtr<AUnitBase> SpawnUnit(TSubclassOf<AUnitBase> UnitType);
 	UFUNCTION( BlueprintCallable, Category = "Units")
 	virtual AUnitBase* SpawnUnit(int32 UnitTier = 0);
+	virtual TArray<TObjectPtr<AUnitBase>> SpawnStartUnits();
 
 	// Add/Remove a tile from the list of claimed tiles
 	void AddClaimedTile(const TObjectPtr<UTile_ClaimableHexTile> Tile) { ClaimedTiles.Add(Tile); }
@@ -47,25 +48,29 @@ public:
 	int32 iUnitStartAmount;
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Team" )
 	TSubclassOf<UHexTile_Creation> CreationTileType;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ClaimedTiles" )
 	TArray<TObjectPtr<UTile_ClaimableHexTile>> ClaimedTiles;
 	
-	UPROPERTY(BlueprintReadOnly, Category = "Units" )
+	UPROPERTY(BlueprintReadOnly, Category = "TeamUnits" )
 	TArray<TObjectPtr<AUnitBase>> Units;
-	UPROPERTY( BlueprintReadWrite, Category = "Units" )
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "TeamUnits" )
 	int32 iMaxSpawnPoints = 1;
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "TeamUnits" )
+	int32 MaxUnitsSpawned;
+
 
 	UPROPERTY(BlueprintAssignable)
 	FOnUnitsChanged OnUnitsChanged;
 	UPROPERTY( BlueprintAssignable )
 	FOnVictoryPointsChanged OnVictoryPointsChanged;
-	
+	UFUNCTION()
 	void RemoveDeadUnits();
 	TArray<TObjectPtr<AUnitBase>> GetUnits() const { return Units; }
 
 protected:
 	TObjectPtr<UTWS_GameManager> GameManager;
-UFUNCTION()
+	UFUNCTION()
 	virtual void OnTurnChanged();
 	virtual void BeginPlay() override;
 	

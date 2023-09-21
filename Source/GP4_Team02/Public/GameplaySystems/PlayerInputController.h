@@ -35,6 +35,9 @@ public:
 	class UInputAction* DeselectAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	class UInputAction* ClaimTileAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	class UInputAction* InfoAction;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
@@ -56,6 +59,8 @@ protected:
 	void Select();
 	
 	void Deselect();
+
+	void ClaimTile();
 
 	void Info();
 	

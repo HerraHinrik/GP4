@@ -10,9 +10,8 @@ void AAI_Pawn::BeginPlay()
 	Super::BeginPlay();
 
 	myTeam = GameManager->AssignAITeam();
-
-	GameManager->OnTurnChanged.AddDynamic(this, &AAI_Pawn::CheckIfMyTurn);
-
+	GameManager->AddPawnToArray(this);
+	
 }
 
 void AAI_Pawn::Tick(float DeltaSeconds)

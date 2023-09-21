@@ -13,12 +13,27 @@ void ATeam::BeginPlay()
 
 TObjectPtr<AUnitBase> ATeam::SpawnUnit(TSubclassOf<AUnitBase> UnitType)
 {
-	return nullptr;
+	if(UnitType == nullptr) return nullptr;
+	
+	const TObjectPtr<AUnitBase> Unit = GetWorld()->SpawnActor<AUnitBase>(UnitType);
+	Unit->SetTeam(this);
+	Unit->OnUnitDeath.AddDynamic(this, &ATeam::RemoveDeadUnits);
+	Units.Add(Unit);
+	OnUnitsChanged.Broadcast();
+	return Unit;
 }
 
 AUnitBase* ATeam::SpawnUnit(int32 UnitTier)
 {
-	return nullptr;
+	if(UnitTypes.Num() == 0) return nullptr;
+	// Clamp the tier to the number of unit types
+	UnitTier = FMath::Clamp(UnitTier, 0, UnitTypes.Num() - 1);
+	return SpawnUnit(UnitTypes[UnitTier]);	
+}
+
+TArray<TObjectPtr<AUnitBase>> ATeam::SpawnStartUnits()
+{
+	return TArray<TObjectPtr<AUnitBase>>();
 }
 
 void ATeam::RemoveDeadUnits()

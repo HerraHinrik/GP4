@@ -3,17 +3,18 @@
 #include <GameBoard/Tiles/TileBase.h>
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "UnitAction/ClaimTileAction.h"
 #include "Units/UnitAction.h"
 #include "Units/UnitAction/MoveAction.h"
 #include "Units/UnitAction/AttackAction.h"
 #include "UnitBase.generated.h"
 
+class UUnitAction_Supportive;
 class UUnitCondition_Base;
 class ATeam;
 class UHexTile;
 class UTexture2D;
-class UUnitAction_Offensive;
-class UUnitAction_Supportive;
+
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUnitDeath);
 
@@ -36,6 +37,8 @@ protected:
 
 	TObjectPtr<UAttackAction> attackAction;
 	bool bCanAttack = true;
+
+	TObjectPtr<UClaimTileAction> claimTileAction;
 
 	TObjectPtr<UTileBase> CurrentTile;
 
@@ -123,6 +126,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	virtual UUnitAction_Supportive* GetSupportiveAction() {return nullptr;}
+
+	UFUNCTION(BlueprintCallable)
+	UClaimTileAction* GetClaimTileAction() {return claimTileAction;}
 
 	UFUNCTION(BlueprintCallable)
 	bool CanAffordAction(int actionCost);

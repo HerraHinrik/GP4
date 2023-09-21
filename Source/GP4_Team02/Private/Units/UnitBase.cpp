@@ -11,8 +11,11 @@ AUnitBase::AUnitBase()
 
 	moveAction = CreateDefaultSubobject<UMoveAction>(FName("Move Action"));
 	attackAction = CreateDefaultSubobject<UAttackAction>(FName("Attack Action"));
+	claimTileAction = CreateDefaultSubobject<UClaimTileAction>(FName("Claim Tile Action"));
+	
 	UnitActions.Add(moveAction);
 	UnitActions.Add(attackAction);
+	UnitActions.Add(claimTileAction);
 }
 
 void AUnitBase::BeginPlay()

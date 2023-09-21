@@ -28,9 +28,6 @@ private:
 
 	void UpdateHoveredTile();
 
-	
-
-
 #pragma region SelectAction
 	TObjectPtr<AUnitBase> SelectedUnit  = nullptr;
 	TObjectPtr<UTileBase> SelectedTile = nullptr;
@@ -44,8 +41,6 @@ private:
 #pragma endregion
 
 protected:
-	virtual void CheckIfMyTurn() override;
-	void Test();
 	virtual void BeginPlay() override;
 
 	
@@ -71,9 +66,14 @@ public:
 	
 	TObjectPtr<AUnitBase> GetSelectedUnit() { return SelectedUnit; }
 	TObjectPtr<UTileBase> GetSelectedTile() { return SelectedTile; }
+
+	virtual void CheckIfMyTurn() override;
+	
 	void SelectTarget();
 
 	void DeselectTarget();
+
+	void ClaimTile();
 	
 	void MovePlayerCursor(FVector2D inputVector);
 };

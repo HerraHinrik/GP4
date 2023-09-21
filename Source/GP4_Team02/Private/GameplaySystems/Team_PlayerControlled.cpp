@@ -1,6 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "GameplaySystems/Team_PlayerControlled.h"
 #include "GameBoard/GameBoard.h"
 #include "GameBoard/GameBoardUtils.h"
@@ -60,15 +57,11 @@ void ATeam_PlayerControlled::AppendCreationTileCoordinates(const TArray<FHexCoor
 TObjectPtr<AUnitBase> ATeam_PlayerControlled::SpawnUnit(TSubclassOf<AUnitBase> UnitType)
 {
 	//if(iSpawnPoints <= 0) return nullptr;
-	if(Units.Num() >= 4 ) return nullptr;
+	if(Units.Num() >= MaxUnitsSpawned ) return nullptr;
 
 	iSpawnPoints--;
 	
-	const TObjectPtr<AUnitBase> Unit = GetWorld()->SpawnActor<AUnitBase>(UnitType);
-	Unit->SetTeam(this);
-	//Unit->OnUnitDeath.AddDynamic(this, &ATeam::RemoveDeadUnits);
-	Units.Add(Unit);
-	OnUnitsChanged.Broadcast();
+	const TObjectPtr<AUnitBase> Unit = Super::SpawnUnit(UnitType);
 
 	// Place unit on creation tile
 	const TArray<UHexTile*>& NodeTiles = GameManager->GetGameBoard()->NodeTiles;
@@ -89,17 +82,23 @@ TObjectPtr<AUnitBase> ATeam_PlayerControlled::SpawnUnit(TSubclassOf<AUnitBase> U
 	} else {
 		UE_LOG( LogTemp, Warning, TEXT( "ATeam::SpawnUnit: Index %d is out of bounds" ), LastIndex );
 	}
-
 	
 	return Unit;
 }
 
 AUnitBase* ATeam_PlayerControlled::SpawnUnit(int32 UnitTier)
 {
-	if(UnitTypes.Num() == 0) return nullptr;
-	// Clamp the tier to the number of unit types
-	UnitTier = FMath::Clamp(UnitTier, 0, UnitTypes.Num() - 1);
-	return SpawnUnit(UnitTypes[UnitTier]);	
+	return SpawnUnit(UnitTypes[UnitTier]);
+}
+
+TArray<TObjectPtr<AUnitBase>> ATeam_PlayerControlled::SpawnStartUnits()
+{
+	TArray<TObjectPtr<AUnitBase>> SpawnedUnits;
+	for (int32 i = 0; i < iUnitStartAmount; i++)
+	{
+		SpawnedUnits.Add(SpawnUnit(0));
+	}
+	return SpawnedUnits;
 }
 
 void ATeam_PlayerControlled::OnTurnChanged()
