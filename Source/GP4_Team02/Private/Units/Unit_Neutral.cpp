@@ -18,12 +18,10 @@ void AUnit_Neutral::BeginPlay()
 	if (StateMachine)
 	{
 		TObjectPtr<UAI_State_Patrol> patrolState = NewObject<UAI_State_Patrol>();
-		StateMachine->GetStateStack().Add(patrolState);
+		StateMachine->StateStack.Add(patrolState);
 	}
 
 	//SetupPatrolArea();
-	
-
 	
 }
 

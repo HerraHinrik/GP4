@@ -90,6 +90,7 @@ void UAI_State_Patrol::OnStateRunning()
 		AI_Unit->bFinishedMyTurn = true;
 		return;
 	}
+	
 	//if we are outside the patrol-area, push return state
 	if (!AI_Unit->GetPatrolArea().Contains(AI_Unit->GetCurrentTile()))
 	{
