@@ -21,6 +21,9 @@ void UClaimTileAction::StartAction(UTileBase* tile, AUnitBase* unit)
 	if (!ClaimableTile)
 		return;
 
+	if(unit->GetTeam() == ClaimableTile->GetClaimingTeam())
+		return;
+	
 	// Start the action
 	UUnitAction::StartAction(tile, unit);
 
