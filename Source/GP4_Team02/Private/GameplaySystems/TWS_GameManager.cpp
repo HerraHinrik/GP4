@@ -4,6 +4,7 @@
 #include "GameBoard/GameBoard.h"
 #include "GameplaySystems/PlayerInputController.h"
 #include "GameplaySystems/Team.h"
+#include "GameplaySystems/TeamPawn.h"
 #include "GameplaySystems/Team_AIControlled.h"
 #include "GameplaySystems/Team_PlayerControlled.h"
 #include "Kismet/GameplayStatics.h"
@@ -122,6 +123,10 @@ void UTWS_GameManager::ChangeTurn()
 	CurrentTeam = TeamArray[TeamIndex];
 	// iRemainingActionPoints = 4;
 
+	for (TObjectPtr<ATeamPawn> team : TeamPawns)
+	{
+		team->CheckIfMyTurn();
+	}
 	OnTurnChanged.Broadcast();
 }
 
@@ -284,4 +289,12 @@ TObjectPtr<ATeam> UTWS_GameManager::AssignAITeam()
 	}
 
 	return outTeam;
+}
+
+void UTWS_GameManager::AddPawnToArray(TObjectPtr<ATeamPawn> pawn)
+{
+	if (pawn)
+	{
+		TeamPawns.Add(pawn);
+	}
 }

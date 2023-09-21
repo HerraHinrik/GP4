@@ -28,13 +28,13 @@ private:
 	void PerformUnitAction();
 
 protected:
-	virtual void CheckIfMyTurn() override;
-	
 	virtual void BeginPlay() override;
 
 	virtual void Tick(float DeltaSeconds) override;
 
 public:
+	virtual void CheckIfMyTurn() override;
+	
 	UPROPERTY(EditAnywhere)
 	float fDelayBetweenActions = 2.0f;
 	

@@ -7,6 +7,7 @@
 #include "TWS_GameManager.generated.h"
 
 
+class ATeamPawn;
 class APlayerInputController;
 class AGameBoard;
 
@@ -24,6 +25,8 @@ class GP4_TEAM02_API UTWS_GameManager : public UTickableWorldSubsystem
 private:
 
 	TObjectPtr<AGameBoard> GameBoard;
+
+	TArray<TObjectPtr<ATeamPawn>> TeamPawns;
 	
 #pragma region Teams
 
@@ -109,9 +112,11 @@ void InitializeGame(TArray<TSubclassOf<class ATeam>> TeamTypes);
 
 UFUNCTION(BlueprintCallable)
 void CheckForWin();
-	
+
+
 void AssignTeamToController(TObjectPtr<APlayerInputController> controller);
 TObjectPtr<ATeam> AssignAITeam();
+void AddPawnToArray(TObjectPtr<ATeamPawn> pawn);
 	
 #pragma region GetterFunctions
 

@@ -23,6 +23,11 @@ void APlayerCursor::BeginPlay()
 	Controller = Cast<APlayerInputController>(GetController());
 }
 
+void APlayerCursor::CheckIfMyTurn()
+{
+	Super::CheckIfMyTurn();
+	DeselectTarget();
+}
 
 #pragma region SelectFunctions
 
@@ -95,34 +100,14 @@ bool APlayerCursor::SelectAction(TObjectPtr<UUnitAction>)
 	return false;
 }
 
-void APlayerCursor::CheckIfMyTurn()
-{
-	Super::CheckIfMyTurn();
-	GEngine->AddOnScreenDebugMessage( -1, 1.f, FColor::Red, "CheckIfMyTurn" );	
-	DeselectTarget();
-}
-
-void APlayerCursor::Test()
-{
-	CheckIfMyTurn();
-}
-
-void APlayerCursor::PerformAction()
-{
-	if (SelectedAction && SelectedUnit && SelectedTile)
-	{
-		SelectedAction->StartAction(SelectedTile, SelectedUnit);
-		SelectedAction = nullptr;
-	}
-}
-
 void APlayerCursor::SelectTarget()
 {
 	if (!myTeam && Controller)
 		myTeam = Controller->GetTeam();
 
 	
-	if (GameManager->GetCurrentTeam() != GetTeam() || !GameManager->GetTurnActive())
+	// if (GameManager->GetCurrentTeam() != GetTeam() || !GameManager->GetTurnActive())
+	if (!bIsMyTurn)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "Not Your Turn");
 		return;	
@@ -153,7 +138,25 @@ void APlayerCursor::DeselectTarget()
 	SelectedAction = nullptr;
 }
 
+
 #pragma endregion
+
+void APlayerCursor::ClaimTile()
+{
+	if (bIsMyTurn && SelectedUnit)
+	{
+		//CLAIM TILE ACTION !!
+	}
+}
+
+void APlayerCursor::PerformAction()
+{
+	if (SelectedAction && SelectedUnit && SelectedTile)
+	{
+		SelectedAction->StartAction(SelectedTile, SelectedUnit);
+		SelectedAction = nullptr;
+	}
+}
 
 void APlayerCursor::MovePlayerCursor(FVector2D inputVector)
 {
