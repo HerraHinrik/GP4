@@ -23,6 +23,9 @@ public:
 	UPROPERTY()
 	TArray<TObjectPtr<UAI_StateBase>> StateStack;
 
+	UPROPERTY()
+	TObjectPtr<UAI_StateBase> NextState;
+
 	UFUNCTION()
 	UAI_StateBase* GetCurrentState() const
 	{

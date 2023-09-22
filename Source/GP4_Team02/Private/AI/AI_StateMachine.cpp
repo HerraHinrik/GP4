@@ -4,6 +4,7 @@
 
 #include "AI/AI_StateBase.h"
 
+
 void UAI_StateMachine::PushNewState(UAI_StateBase* state)
 {
 	if (!state)
@@ -13,8 +14,10 @@ void UAI_StateMachine::PushNewState(UAI_StateBase* state)
 	// 	StateStack.Last()->OnStateExit();
 
 	state->Machine = this;
-	StateStack.Add(state);
-	state->OnStateBegin();
+	state->AI_Unit = this->AI_Unit;
+	NextState = state;
+	
+	// state->OnStateBegin();
 }
 
 void UAI_StateMachine::PopTopState()

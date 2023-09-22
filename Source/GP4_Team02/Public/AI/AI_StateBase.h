@@ -28,4 +28,7 @@ public:
 
 	UFUNCTION()
 	void SetAIUnit(AUnit_Neutral* Unit) { AI_Unit = Unit; }
+
+	// UFUNCTION()
+	// void SetMachine(UAI_StateMachine* stateMachine) { Machine = stateMachine; }
 };

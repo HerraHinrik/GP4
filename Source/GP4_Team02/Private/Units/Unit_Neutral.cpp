@@ -18,13 +18,34 @@ void AUnit_Neutral::BeginPlay()
 	
 	if (StateMachine)
 	{
+		StateMachine->SetControlledUnit(this);
+		
 		TObjectPtr<UAI_State_Patrol> patrolState = NewObject<UAI_State_Patrol>();
 		patrolState->SetAIUnit(this);
+		patrolState->Machine = StateMachine;
 		StateMachine->StateStack.Add(patrolState);
 	}
 
 	GetWorld()->GetSubsystem<UTWS_GameManager>()->OnGameReady.AddDynamic(this, &AUnit_Neutral::SetupPatrolArea);
 }
+
+void AUnit_Neutral::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	if (bMyTurnToAct)
+	{
+		if (bFinishedMyTurn)
+		{
+			bMyTurnToAct = false;
+		}
+		else
+		{
+			ExecuteCurrentState();
+		}
+	}
+}
+
 
 void AUnit_Neutral::SetupPatrolArea()
 {
@@ -121,6 +142,12 @@ bool AUnit_Neutral::CheckTargetInRange()
 
 void AUnit_Neutral::ExecuteCurrentState()
 {
+	if (StateMachine->NextState)
+	{
+		StateMachine->StateStack.Add(StateMachine->NextState);
+		StateMachine->NextState = nullptr;
+	}
+	
 	TObjectPtr<UAI_StateBase> state = StateMachine->GetCurrentState();
 	if (state)
 	{

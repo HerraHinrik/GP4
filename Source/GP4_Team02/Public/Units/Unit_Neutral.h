@@ -13,6 +13,8 @@ class GP4_TEAM02_API AUnit_Neutral : public AUnitBase
 {
 	GENERATED_BODY()
 
+	
+
 protected:
 	UPROPERTY()
 	TObjectPtr<UAI_StateMachine> StateMachine;
@@ -23,7 +25,7 @@ protected:
 	UPROPERTY()
 	TArray<TObjectPtr<UTileBase>> PatrolArea;
 	
-	
+	virtual void Tick(float DeltaSeconds) override;
 	virtual void BeginPlay() override;
 
 	UFUNCTION()
@@ -34,6 +36,9 @@ protected:
 public:
 	UPROPERTY()
 	bool bFinishedMyTurn = false;
+
+	UPROPERTY()
+	bool bMyTurnToAct = false;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int iPatrolIndex = 0;

@@ -47,7 +47,7 @@ void AAI_Pawn::CheckIfMyTurn()
 void AAI_Pawn::PerformUnitAction()
 {
 	fDelayTimer = fDelayBetweenActions;
-	ActiveUnit->ExecuteCurrentState();
+	ActiveUnit->bMyTurnToAct = true;
 }
 
 void AAI_Pawn::ExecuteTurn(float DeltaSeconds)
