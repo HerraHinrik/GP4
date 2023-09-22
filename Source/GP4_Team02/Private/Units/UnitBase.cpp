@@ -32,11 +32,19 @@ void AUnitBase::Tick(float DeltaTime)
 }
 
 
-
-TArray<TObjectPtr<UTileBase>> AUnitBase::GetAdjacentTiles()
+void AUnitBase::GetAdjacentTiles(TArray<UTileBase*>& tileArray)
 {
-	TArray<TObjectPtr<UTileBase>> outArray = TArray<TObjectPtr<UTileBase>>();
+	TArray<TObjectPtr<UTileBase>> outArray;
+	if (!CurrentTile)
+		return;
+	
 	TArray<ULink*> links = CurrentTile->GetLinks();
+	if (links.IsEmpty() || links.Num() <= 0)
+	{
+		GEngine->AddOnScreenDebugMessage(1, 5, FColor::Emerald, "No Adjacent Links");
+		return;
+	}
+	
 	for(int i = 0; i < links.Num(); i++)
 	{
 		TObjectPtr<UTileBase> tile = Cast<UTileBase>(links[i]->GetTarget());
@@ -45,7 +53,8 @@ TArray<TObjectPtr<UTileBase>> AUnitBase::GetAdjacentTiles()
 			outArray.Add(tile);
 		}
 	}
-	return outArray;
+	
+	tileArray = outArray;
 }
 
 void AUnitBase::ResetUnit()

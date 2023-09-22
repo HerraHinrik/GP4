@@ -36,8 +36,11 @@ void UArchAngel_PierceAction::StartAction(UTileBase* tile, AUnitBase* unit)
 	//try to find a tile behind first target
 	TObjectPtr<UTileBase> rearTile;
 	FHexCoordinates directionCoords = tile->GetCoordinates() - startTile->GetCoordinates();
-
-	for (TObjectPtr<UTileBase> neighbourTile : targetEnemy->GetAdjacentTiles())
+	
+	TArray<TObjectPtr<UTileBase>> myNeighbours;
+	unit->GetAdjacentTiles(myNeighbours);
+	
+	for (TObjectPtr<UTileBase> neighbourTile : myNeighbours)
 	{
 		FHexCoordinates neighbourDirectionCoords = neighbourTile->GetCoordinates() - tile->GetCoordinates();
 		if (directionCoords == neighbourDirectionCoords)

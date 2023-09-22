@@ -4,15 +4,15 @@
 
 #include "AI/AI_StateBase.h"
 
-void UAI_StateMachine::PushNewState(TObjectPtr<UAI_StateBase> state)
+void UAI_StateMachine::PushNewState(UAI_StateBase* state)
 {
 	if (!state)
 		return;
 
-	if (!StateStack.IsEmpty())
-		StateStack.Last()->OnStateExit();
+	// if (!StateStack.IsEmpty())
+	// 	StateStack.Last()->OnStateExit();
 
-	state->SetMachine(this);
+	state->Machine = this;
 	StateStack.Add(state);
 	state->OnStateBegin();
 }
@@ -29,6 +29,6 @@ void UAI_StateMachine::PopTopState()
 	//pool removed state?
 
 	
-	if (!StateStack.IsEmpty())
-		StateStack.Last()->OnStateBegin();
+	// if (!StateStack.IsEmpty())
+	// 	StateStack.Last()->OnStateBegin();
 }

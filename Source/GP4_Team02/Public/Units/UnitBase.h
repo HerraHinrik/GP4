@@ -31,25 +31,28 @@ protected:
 	bool bIsAlive = true;
 	int iUnitActionPoints = 0;
 
+	UPROPERTY()
 	TObjectPtr<ATeam> myTeam;
-
+	UPROPERTY()
 	TObjectPtr<UMoveAction> moveAction;
-
+	UPROPERTY()
 	TObjectPtr<UAttackAction> attackAction;
+	UPROPERTY()
 	bool bCanAttack = true;
-
+	UPROPERTY()
 	TObjectPtr<UClaimTileAction> claimTileAction;
-
+	UPROPERTY()
 	TObjectPtr<UTileBase> CurrentTile;
-
+	UPROPERTY()
 	TArray<TObjectPtr<UUnitCondition_Base>> Conditions;
 	
 	virtual void BeginPlay() override;
 
+	UFUNCTION()
 	void ChangeCurrentHealth(int change);
-
+	UFUNCTION()
 	void SetUnitDead();
-
+	UFUNCTION()
 	void SetUnitAlive();
 
 public:
@@ -88,6 +91,9 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Unit Actions")
 	TArray<UUnitAction*> UnitActions;
+
+	UPROPERTY()
+	TArray<TObjectPtr<UTileBase>> AdjacentTiles;
 
 	UFUNCTION(BlueprintPure)
 	bool IsUnitAlive() const { return bIsAlive; }
@@ -145,8 +151,9 @@ public:
 	TObjectPtr<ATeam> GetTeam() const { return myTeam; }
 	
 	void SetTeam(TObjectPtr<ATeam> team) { myTeam = team; }
-	
-	TArray<TObjectPtr<UTileBase>> GetAdjacentTiles();
+
+	UFUNCTION()
+	void GetAdjacentTiles(TArray<UTileBase*>& tileArray);
 
 	void virtual ResetUnit();
 
