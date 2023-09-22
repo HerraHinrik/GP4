@@ -93,6 +93,7 @@ public:
 
 protected:
 	// Links to other tiles
+	UPROPERTY()
 	TArray<ULink*> Links = TArray<ULink*>();
 	// Tile Width
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tile")

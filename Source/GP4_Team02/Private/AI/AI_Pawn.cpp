@@ -40,6 +40,7 @@ void AAI_Pawn::CheckIfMyTurn()
 	else
 	{
 		bCanAct = false;
+		ActiveUnit = nullptr;
 	}
 }
 
@@ -53,7 +54,7 @@ void AAI_Pawn::ExecuteTurn(float DeltaSeconds)
 {
 	if (TurnStack.IsEmpty())
 	{
-		if(!ActiveUnit || (ActiveUnit && ActiveUnit->GetFinishedMyTurn()))
+		if(!ActiveUnit || (ActiveUnit && ActiveUnit->bFinishedMyTurn))
 		{
 			GameManager->EndTurn();
 			bCanAct = false;
@@ -61,7 +62,7 @@ void AAI_Pawn::ExecuteTurn(float DeltaSeconds)
 		}
 	}
 	
-	if (!ActiveUnit || ActiveUnit->GetFinishedMyTurn())
+	if (!ActiveUnit || ActiveUnit->bFinishedMyTurn)
 	{
 		if (!TurnStack.IsEmpty())
 		{

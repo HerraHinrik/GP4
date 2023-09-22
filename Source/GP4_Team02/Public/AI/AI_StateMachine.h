@@ -23,7 +23,8 @@ public:
 	UPROPERTY()
 	TArray<TObjectPtr<UAI_StateBase>> StateStack;
 
-	TObjectPtr<UAI_StateBase> GetCurrentState() const
+	UFUNCTION()
+	UAI_StateBase* GetCurrentState() const
 	{
 		if (!StateStack.IsEmpty() && StateStack.Num() > 0)
 		{
@@ -37,12 +38,17 @@ public:
 		return nullptr;
 	}
 
-	void PushNewState(TObjectPtr<UAI_StateBase> state);
+	UFUNCTION()
+	void PushNewState(UAI_StateBase* state);
 
+	UFUNCTION()
 	void PopTopState();
 
-	void SetControlledUnit(TObjectPtr<AUnit_Neutral> unit) { AI_Unit = unit; }
-	TObjectPtr<AUnit_Neutral> GetControlledUnit() const { return AI_Unit; }
+	UFUNCTION()
+	void SetControlledUnit(AUnit_Neutral* unit) { AI_Unit = unit; }
+
+	UFUNCTION()
+	AUnit_Neutral* GetControlledUnit() const { return AI_Unit; }
 	// TArray<TObjectPtr<UAI_StateBase>> GetStateStack() const { return StateStack ;}
 	
 };

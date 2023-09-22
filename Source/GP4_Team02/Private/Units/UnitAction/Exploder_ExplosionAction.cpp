@@ -25,7 +25,9 @@ void UExploder_ExplosionAction::StartAction(UTileBase* tile, AUnitBase* unit)
 	Super::StartAction(tile, unit);
 
 	//damage surrounding units
-	for (TObjectPtr<UTileBase> adjacentTile : exploder->GetAdjacentTiles())
+	TArray<TObjectPtr<UTileBase>> myNeighbours;
+	unit->GetAdjacentTiles(myNeighbours);
+	for (TObjectPtr<UTileBase> adjacentTile : myNeighbours)
 	{
 		if (adjacentTile->GetOccupyingUnit())
 		{

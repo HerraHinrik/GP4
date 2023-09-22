@@ -14,17 +14,24 @@ class GP4_TEAM02_API AAI_Pawn : public ATeamPawn
 	GENERATED_BODY()
 
 private:
+	UPROPERTY()
 	float fDelayTimer;
+	UPROPERTY()
 	bool bCanAct = false;
-
-	// TObjectPtr<ATeam> AI_Team;
+	
+	UPROPERTY()
 	TArray<TObjectPtr<AUnit_Neutral>> TurnStack;
+	UPROPERTY()
 	TObjectPtr<AUnit_Neutral> ActiveUnit;
 	
 
+	UFUNCTION()
 	void StackMyUnits();
+	UFUNCTION()
 	void ExecuteTurn(float DeltaSeconds);
+	UFUNCTION()
 	void WaitAndAct(float DeltaSeconds);
+	UFUNCTION()
 	void PerformUnitAction();
 
 protected:

@@ -13,17 +13,19 @@ class GP4_TEAM02_API UAI_StateBase : public UObject
 {
 	GENERATED_BODY()
 
-protected:
+public:
+	UPROPERTY()
 	TObjectPtr<UAI_StateMachine> Machine;
+	UPROPERTY()
 	TObjectPtr<AUnit_Neutral> AI_Unit;
 	
-public:
-	void virtual OnStateBegin();
-	void virtual OnStateRunning();
-	void virtual OnStateExit();
+	UFUNCTION()
+	virtual void OnStateBegin();
+	UFUNCTION()
+	virtual void OnStateRunning();
+	UFUNCTION()
+	virtual void OnStateExit();
 
-	void SetAIUnit(const TObjectPtr<AUnit_Neutral> Unit) { AI_Unit = Unit; }
-
-	void SetMachine(TObjectPtr<UAI_StateMachine> machine) { Machine = machine; }
-	TObjectPtr<UAI_StateMachine> GetMachine() const { return Machine; }
+	UFUNCTION()
+	void SetAIUnit(AUnit_Neutral* Unit) { AI_Unit = Unit; }
 };

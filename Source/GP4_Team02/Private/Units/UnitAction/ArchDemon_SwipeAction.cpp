@@ -3,6 +3,7 @@
 #include "Units/UnitAction/ArchDemon_SwipeAction.h"
 
 #include "GameBoard/GameBoardUtils.h"
+#include "GameBoard/Tiles/TileBase.h"
 #include "Units/UnitBase.h"
 #include "Units/Unit_Devil_ArchDemon.h"
 
@@ -32,8 +33,10 @@ void UArchDemon_SwipeAction::StartAction(UTileBase* tile, AUnitBase* unit)
 	if (!targetEnemy) { return; }
 
 	//get neighbours of unit and target
-	TArray<TObjectPtr<UTileBase>> myNeighbours = unit->GetAdjacentTiles();
-	TArray<TObjectPtr<UTileBase>> targetNeighbours = targetEnemy->GetAdjacentTiles();
+	TArray<TObjectPtr<UTileBase>> myNeighbours;
+	unit->GetAdjacentTiles(myNeighbours);
+	TArray<TObjectPtr<UTileBase>> targetNeighbours;
+	targetEnemy->GetAdjacentTiles(targetNeighbours);
 	if (myNeighbours.IsEmpty() || targetNeighbours.IsEmpty())
 		return;
 

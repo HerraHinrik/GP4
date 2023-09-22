@@ -5,7 +5,7 @@
 #include "AI/AI_StateMachine.h"
 #include "AI/AI_State_ChasePlayerUnit.h"
 #include "AI/AI_State_ReturnToPath.h"
-#include "GameplaySystems/Team.h"
+#include "GameBoard/Tiles/TileBase.h"
 #include "GameplaySystems/Team_PlayerControlled.h"
 #include "Units/Unit_Neutral.h"
 
@@ -52,7 +52,8 @@ bool UAI_State_Patrol::CheckForEnemies()
 		return false;
 
 	//get all neighbouring tiles
-	TArray<TObjectPtr<UTileBase>> neighbours = AI_Unit->GetAdjacentTiles();
+	TArray<TObjectPtr<UTileBase>> neighbours;
+	AI_Unit->GetAdjacentTiles(neighbours);
 	if (neighbours.IsEmpty())
 		return false;
 
