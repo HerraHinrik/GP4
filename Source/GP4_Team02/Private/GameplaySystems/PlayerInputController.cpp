@@ -66,6 +66,8 @@ void APlayerInputController::SetupPlayerInputComponent()
 		EnhancedInputComponent->BindAction(ToggleMenuAction, ETriggerEvent::Completed, this, &APlayerInputController::ClaimTile);
 		EnhancedInputComponent->BindAction(InfoAction, ETriggerEvent::Completed, this, &APlayerInputController::Info);
 		EnhancedInputComponent->BindAction(ToggleMenuAction, ETriggerEvent::Completed, this, &APlayerInputController::ToggleMenu);
+		EnhancedInputComponent->BindAction(EndTurnAction, ETriggerEvent::Completed, this, &APlayerInputController::EndTurn);
+		EnhancedInputComponent->BindAction(DestroyUnitAction, ETriggerEvent::Completed, this, &APlayerInputController::DestroyUnit);
 	}
 }
 
@@ -116,5 +118,21 @@ void APlayerInputController::Info()
 void APlayerInputController::ToggleMenu()
 {
 	//Toggle Menu
+}
+
+void APlayerInputController::EndTurn()
+{
+	if (Cursor)
+	{
+		Cursor->EndTurn();
+	}
+}
+
+void APlayerInputController::DestroyUnit()
+{
+	if (Cursor)
+	{
+		Cursor->DestroySelectedUnit();
+	}
 }
 

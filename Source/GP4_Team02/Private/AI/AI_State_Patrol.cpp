@@ -16,7 +16,7 @@ TObjectPtr<UTileBase> UAI_State_Patrol::GetNextTile()
 		return nullptr;
 
 	//return if we haven't reached previous "next tile"
-	if (NextTile != AI_Unit->GetCurrentTile())
+	if (NextTile && NextTile != AI_Unit->GetCurrentTile())
 		return NextTile;
 
 	//if we are going back and forth rather than in a circle

@@ -117,7 +117,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void RemoveCondition(UUnitCondition_Base* condition);
-	
+
+	UFUNCTION(BlueprintCallable)
+	bool IsInSafeZone();
+
 	UFUNCTION(BlueprintCallable)
 	void ReceiveDamage(int amount);
 

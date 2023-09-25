@@ -5,9 +5,11 @@
 #include "AI/AI_StateBase.h"
 #include "AI/AI_StateMachine.h"
 #include "AI/AI_State_Patrol.h"
+#include "GameBoard/GameBoard.h"
 #include "GameBoard/GameBoardUtils.h"
 #include "GameBoard/Tiles/HexTile.h"
 #include "GameplaySystems/TWS_GameManager.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 
 void AUnit_Neutral::BeginPlay()
@@ -76,7 +78,26 @@ void AUnit_Neutral::SetupPatrolArea()
 			GEngine->AddOnScreenDebugMessage( -1, 1.f, FColor::Red, "No Matching Hex Ring" );	
 			break;
 	}
+
 	
+}
+
+void AUnit_Neutral::SetupIndex()
+{
+	if (!CurrentTile)
+		return;
+
+	int outIndex = 0;
+	for (TObjectPtr<UTileBase> tile : PatrolArea)
+	{
+		if (tile == CurrentTile)
+		{
+			iPatrolIndex = outIndex;
+			break;
+		}
+		
+		outIndex++;
+	}
 }
 
 TArray<TObjectPtr<UTileBase>> AUnit_Neutral::GetPartOfRing(TArray<TObjectPtr<UHexTile>> ring, int ringIndex)
@@ -91,8 +112,10 @@ TArray<TObjectPtr<UTileBase>> AUnit_Neutral::GetPartOfRing(TArray<TObjectPtr<UHe
 	{
 		for (TObjectPtr<UHexTile> hex : ring)
 		{
+			UKismetSystemLibrary::DrawDebugSphere(GetWorld(), hex->GetWorldLocation() + FVector(0,0,100.0f), 10.0f, 12, FColor::Red, 10.0f, 5.0f);
 			outArray.Add(hex);
 		}
+		bCircularPatrol = true;
 	}
 	else
 	{
@@ -109,6 +132,7 @@ TArray<TObjectPtr<UTileBase>> AUnit_Neutral::GetPartOfRing(TArray<TObjectPtr<UHe
 
 			//exclude player start tiles
 			if (hexR <= -ringIndex || hexR >= ringIndex)
+				UKismetSystemLibrary::DrawDebugSphere(GetWorld(), hex->GetWorldLocation() + FVector(0,0,100.0f), 10.0f, 12, FColor::Red, 10.0f, 5.0f);
 				outArray.Add(hex);
 		}
 	}
@@ -123,9 +147,20 @@ TArray<TObjectPtr<UTileBase>> AUnit_Neutral::GetPartOfRing(TArray<TObjectPtr<UHe
 
 bool AUnit_Neutral::CheckTargetInRange()
 {
+	//if there is no target we can't check if it's in range, can we ?
+	if (!GetTargetUnit())
+		return false;
+
+	//if the target made it to safety, stop chasing it
+	if (GetTargetUnit()->IsInSafeZone())
+	{
+		TargetUnit = nullptr;
+		return false;		
+	}
+	
 	//get all nodes within attack range
 	TArray<TObjectPtr<UTileBase>> tiles;
-	GameBoardUtils::GetNodesWithinRadius(GetCurrentTile()->GetWorldLocation(),tiles, iAttackRange);
+	GameBoardUtils::FindNodesWithinRadius(GetCurrentTile(), iAttackRange, tiles);
 
 	//early out if empty array
 	if (tiles.IsEmpty())
@@ -169,6 +204,8 @@ void AUnit_Neutral::ResetUnit()
 	Super::ResetUnit();
 
 	bFinishedMyTurn = false;
+
+	bMyTurnToAct = false;
 }
 
 

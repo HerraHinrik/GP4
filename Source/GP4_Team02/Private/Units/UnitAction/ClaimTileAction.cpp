@@ -34,6 +34,7 @@ void UClaimTileAction::ExecuteAction()
 {
 	Super::ExecuteAction();
 
+	GEngine->AddOnScreenDebugMessage( -1, 5.f, FColor::Red, "Claiming Tile"	);
 	// Claim the tile
 	ClaimableTile->ClaimTile(Action_Unit->GetTeam());
 
