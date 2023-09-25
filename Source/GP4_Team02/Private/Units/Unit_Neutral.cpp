@@ -5,6 +5,7 @@
 #include "AI/AI_StateBase.h"
 #include "AI/AI_StateMachine.h"
 #include "AI/AI_State_Patrol.h"
+#include "GameBoard/GameBoard.h"
 #include "GameBoard/GameBoardUtils.h"
 #include "GameBoard/Tiles/HexTile.h"
 #include "GameplaySystems/TWS_GameManager.h"
@@ -123,9 +124,20 @@ TArray<TObjectPtr<UTileBase>> AUnit_Neutral::GetPartOfRing(TArray<TObjectPtr<UHe
 
 bool AUnit_Neutral::CheckTargetInRange()
 {
+	//if there is no target we can't check if it's in range, can we ?
+	if (!GetTargetUnit())
+		return false;
+
+	//if the target made it to safety, stop chasing it
+	if (GetTargetUnit()->IsInSafeZone())
+	{
+		TargetUnit = nullptr;
+		return false;		
+	}
+	
 	//get all nodes within attack range
 	TArray<TObjectPtr<UTileBase>> tiles;
-	GameBoardUtils::GetNodesWithinRadius(GetCurrentTile()->GetWorldLocation(),tiles, iAttackRange);
+	GameBoardUtils::FindNodesWithinRadius(GetCurrentTile(), iAttackRange, tiles);
 
 	//early out if empty array
 	if (tiles.IsEmpty())
@@ -169,6 +181,8 @@ void AUnit_Neutral::ResetUnit()
 	Super::ResetUnit();
 
 	bFinishedMyTurn = false;
+
+	bMyTurnToAct = false;
 }
 
 

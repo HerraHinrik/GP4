@@ -151,6 +151,7 @@ void AUnitBase::SetUnitDead()
 	GetCurrentTile()->SetOccupyingUnit(nullptr);
 	CurrentTile = nullptr;
 	this->SetActorHiddenInGame(true);
+	this->SetActorLocation(FVector(0,0,-1000));
 	myTeam->RemoveDeadUnits();
 	OnUnitDeath.Broadcast();
 }
