@@ -167,6 +167,8 @@ void APlayerCursor::DestroySelectedUnit()
 {
 	if (!bIsMyTurn || !SelectedUnit)
 		return;
+	SelectedUnit->ReceiveDamage(666);
+	SelectedUnit = nullptr;
 }
 
 void APlayerCursor::PerformAction()
