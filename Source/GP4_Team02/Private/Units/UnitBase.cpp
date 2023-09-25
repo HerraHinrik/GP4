@@ -2,6 +2,7 @@
 #include "Units/UnitBase.h"
 #include "GameBoard/Link.h"
 #include "GameBoard/Tiles/HexTile.h"
+#include "GameBoard/Tiles/HexTile_Creation.h"
 #include "GameplaySystems/Team.h"
 #include "Units/UnitConditions/UnitCondition_Base.h"
 
@@ -91,6 +92,19 @@ void AUnitBase::RemoveCondition(UUnitCondition_Base* condition)
 	}
 }
 
+bool AUnitBase::IsInSafeZone()
+{
+	// Check if on a safe tile
+	TObjectPtr<UHexTile_Creation> tile = Cast<UHexTile_Creation>(CurrentTile);
+	if(!tile) return false;
+
+	TSubclassOf<UHexTile_Creation> teamTile = myTeam->CreationTileType;
+	if(!teamTile) return false;
+
+	if(tile.IsA(teamTile)) return true;
+
+	return false;
+}
 
 #pragma region LifeAndDeath
 
