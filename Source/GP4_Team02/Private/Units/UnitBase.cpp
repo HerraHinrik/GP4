@@ -148,12 +148,11 @@ bool AUnitBase::CanAffordAction(int actionCost)
 void AUnitBase::SetUnitDead()
 {
 	bIsAlive = false;
+	OnUnitDeath.Broadcast();
 	GetCurrentTile()->SetOccupyingUnit(nullptr);
 	CurrentTile = nullptr;
 	this->SetActorHiddenInGame(true);
 	this->SetActorLocation(FVector(0,0,-1000));
-	myTeam->RemoveDeadUnits();
-	OnUnitDeath.Broadcast();
 }
 
 void AUnitBase::SetUnitAlive()
