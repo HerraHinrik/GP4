@@ -79,6 +79,10 @@ void AUnit_Neutral::SetupPatrolArea()
 			break;
 	}
 
+	if (!PatrolArea.IsEmpty())
+	{
+		SetupIndex();
+	}
 	
 }
 

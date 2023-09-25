@@ -9,40 +9,59 @@
 #include "GameplaySystems/Team_PlayerControlled.h"
 #include "Units/Unit_Neutral.h"
 
-TObjectPtr<UTileBase> UAI_State_Patrol::GetNextTile()
+bool UAI_State_Patrol::GotNextTile()
 {
 	//return if no tiles in array
 	if (AI_Unit->GetPatrolArea().IsEmpty())
-		return nullptr;
+		return false;
 
 	//return if we haven't reached previous "next tile"
 	if (NextTile && NextTile != AI_Unit->GetCurrentTile())
-		return NextTile;
+		return true;
 
 	//if we are going back and forth rather than in a circle
 	if (!AI_Unit->bCircularPatrol)
 	{
+		
 		if (bIncrementIndex)
+		{
 			AI_Unit->iPatrolIndex++;
+			if (AI_Unit->iPatrolIndex >= AI_Unit->GetPatrolArea().Num())
+			{
+				AI_Unit->iPatrolIndex = AI_Unit->GetPatrolArea().Num() - 1;
+			}
+		}
 		else
+		{
 			AI_Unit->iPatrolIndex--;
-
+			if (AI_Unit->iPatrolIndex < 0)
+			{
+				AI_Unit->iPatrolIndex = 0;
+			}
+		}
+		
 		if (AI_Unit->iPatrolIndex >= AI_Unit->GetPatrolArea().Num() - 1 || AI_Unit->iPatrolIndex <= 0)
 		{
 			bIncrementIndex = !bIncrementIndex;
 		}
+		
 	}
 	else
 	{
 		AI_Unit->iPatrolIndex++;
 		if (AI_Unit->iPatrolIndex >= AI_Unit->GetPatrolArea().Num())
 			AI_Unit->iPatrolIndex = 0;
+		
 	}
+	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red,"Index: " + AI_Unit->iPatrolIndex);
 
-	if (TObjectPtr<UTileBase> outTile = AI_Unit->GetPatrolArea()[AI_Unit->iPatrolIndex])
-		return outTile;
 
-	return nullptr;
+	if (TObjectPtr<UTileBase> nextTile = AI_Unit->GetPatrolArea()[AI_Unit->iPatrolIndex])
+	{
+		NextTile = nextTile;
+		return true;
+	}
+	return false;
 }
 
 bool UAI_State_Patrol::CheckForEnemies()
@@ -60,9 +79,10 @@ bool UAI_State_Patrol::CheckForEnemies()
 	//if one of the neighbouring tiles have a player-unit set it as the target
 	for (TObjectPtr<UTileBase> tile : neighbours)
 	{
-		if (const TObjectPtr<AUnitBase> Unit = tile->GetOccupyingUnit(); Unit)
+		if (const TObjectPtr<AUnitBase> Unit = tile->GetOccupyingUnit())
 		{
-			if(const TObjectPtr<ATeam_PlayerControlled> PlayerTeam = Cast<ATeam_PlayerControlled>(Unit->GetTeam()); PlayerTeam)
+			if(const TObjectPtr<ATeam_PlayerControlled> PlayerTeam = Cast<ATeam_PlayerControlled>(Unit->GetTeam()); PlayerTeam
+				&& !Unit->IsInSafeZone())
 			{
 				AI_Unit->SetNewTarget(tile->GetOccupyingUnit());
 				return true;
@@ -110,9 +130,9 @@ void UAI_State_Patrol::OnStateRunning()
 	}
 	
 	//keep on patrollin'
-	if (GetNextTile())
+	if (GotNextTile())
 	{
-		AI_Unit->GetMoveAction()->StartAction(GetNextTile(), AI_Unit);
+		AI_Unit->GetMoveAction()->StartAction(NextTile, AI_Unit);
 	}
 	GEngine->AddOnScreenDebugMessage( -1, 10.f, FColor::Blue, "Patrol" );
 	AI_Unit->bFinishedMyTurn = true;
