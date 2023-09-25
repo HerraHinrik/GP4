@@ -78,7 +78,26 @@ void AUnit_Neutral::SetupPatrolArea()
 			GEngine->AddOnScreenDebugMessage( -1, 1.f, FColor::Red, "No Matching Hex Ring" );	
 			break;
 	}
+
 	
+}
+
+void AUnit_Neutral::SetupIndex()
+{
+	if (!CurrentTile)
+		return;
+
+	int outIndex = 0;
+	for (TObjectPtr<UTileBase> tile : PatrolArea)
+	{
+		if (tile == CurrentTile)
+		{
+			iPatrolIndex = outIndex;
+			break;
+		}
+		
+		outIndex++;
+	}
 }
 
 TArray<TObjectPtr<UTileBase>> AUnit_Neutral::GetPartOfRing(TArray<TObjectPtr<UHexTile>> ring, int ringIndex)
@@ -93,8 +112,10 @@ TArray<TObjectPtr<UTileBase>> AUnit_Neutral::GetPartOfRing(TArray<TObjectPtr<UHe
 	{
 		for (TObjectPtr<UHexTile> hex : ring)
 		{
+			UKismetSystemLibrary::DrawDebugSphere(GetWorld(), hex->GetWorldLocation() + FVector(0,0,100.0f), 10.0f, 12, FColor::Red, 10.0f, 5.0f);
 			outArray.Add(hex);
 		}
+		bCircularPatrol = true;
 	}
 	else
 	{
@@ -111,7 +132,7 @@ TArray<TObjectPtr<UTileBase>> AUnit_Neutral::GetPartOfRing(TArray<TObjectPtr<UHe
 
 			//exclude player start tiles
 			if (hexR <= -ringIndex || hexR >= ringIndex)
-				// UKismetSystemLibrary::DrawDebugSphere(GetWorld(), hex->GetWorldLocation() + FVector(0,0,100.0f), 10.0f, 12, FColor::Red, 10.0f, 5.0f);
+				UKismetSystemLibrary::DrawDebugSphere(GetWorld(), hex->GetWorldLocation() + FVector(0,0,100.0f), 10.0f, 12, FColor::Red, 10.0f, 5.0f);
 				outArray.Add(hex);
 		}
 	}
