@@ -155,6 +155,20 @@ void APlayerCursor::ClaimTile()
 	}
 }
 
+void APlayerCursor::EndTurn()
+{
+	if (!bIsMyTurn)
+		return;
+
+	GameManager->EndTurn();
+}
+
+void APlayerCursor::DestroySelectedUnit()
+{
+	if (!bIsMyTurn || !SelectedUnit)
+		return;
+}
+
 void APlayerCursor::PerformAction()
 {
 	if (SelectedAction && SelectedUnit && SelectedTile)

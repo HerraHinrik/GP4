@@ -43,6 +43,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	class UInputAction* ToggleMenuAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	class UInputAction* EndTurnAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	class UInputAction* DestroyUnitAction;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<APlayerCursor>PlayerCursor;
 
@@ -66,6 +72,10 @@ protected:
 	
 	void ToggleMenu();
 
+	void EndTurn();
+
+	void DestroyUnit();
+	
 private:
 	TObjectPtr<APlayerCursor> Cursor;
 

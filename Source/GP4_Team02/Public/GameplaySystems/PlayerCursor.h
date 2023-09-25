@@ -74,6 +74,10 @@ public:
 	void DeselectTarget();
 
 	void ClaimTile();
+
+	void EndTurn();
+
+	void DestroySelectedUnit();
 	
 	void MovePlayerCursor(FVector2D inputVector);
 };
