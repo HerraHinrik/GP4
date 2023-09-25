@@ -4,6 +4,7 @@
 #include "GameBoard/Tiles/HexTile.h"
 #include "GameBoard/Tiles/HexTile_Creation.h"
 #include "GameplaySystems/Team.h"
+#include "GameplaySystems/TWS_GameManager.h"
 #include "Units/UnitConditions/UnitCondition_Base.h"
 
 AUnitBase::AUnitBase()
@@ -15,8 +16,11 @@ AUnitBase::AUnitBase()
 	claimTileAction = CreateDefaultSubobject<UClaimTileAction>(FName("Claim Tile Action"));
 	
 	UnitActions.Add(moveAction);
+	moveAction->OnActionCompleted.AddDynamic(this, &AUnitBase::OnActionCompleted);
 	UnitActions.Add(attackAction);
+	attackAction->OnActionCompleted.AddDynamic(this, &AUnitBase::OnActionCompleted);
 	UnitActions.Add(claimTileAction);
+	claimTileAction->OnActionCompleted.AddDynamic(this, &AUnitBase::OnActionCompleted);
 }
 
 void AUnitBase::BeginPlay()
@@ -24,6 +28,7 @@ void AUnitBase::BeginPlay()
 	Super::BeginPlay();
 
 	iUnitActionPoints = iMaxActionPoints;
+	iCurrentHealth = iMaxHealth;
 	
 }
 
@@ -32,6 +37,22 @@ void AUnitBase::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+void AUnitBase::OnActionCompleted()
+{
+	bool bEndTurn = true;
+	for (TObjectPtr<AUnitBase> Unit : myTeam->Units)
+	{
+		if(Unit->GetRemainingActionPoints() > 0)
+		{
+			bEndTurn = false;
+			break;
+		}
+	}
+	if(bEndTurn)
+	{
+		GetWorld()->GetSubsystem<UTWS_GameManager>()->EndTurn();
+	}
+}
 
 void AUnitBase::GetAdjacentTiles(TArray<UTileBase*>& tileArray)
 {
