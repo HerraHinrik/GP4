@@ -9,6 +9,7 @@
 #include "GameBoard/GameBoardUtils.h"
 #include "GameBoard/Tiles/HexTile.h"
 #include "GameplaySystems/TWS_GameManager.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 
 void AUnit_Neutral::BeginPlay()
@@ -110,6 +111,7 @@ TArray<TObjectPtr<UTileBase>> AUnit_Neutral::GetPartOfRing(TArray<TObjectPtr<UHe
 
 			//exclude player start tiles
 			if (hexR <= -ringIndex || hexR >= ringIndex)
+				// UKismetSystemLibrary::DrawDebugSphere(GetWorld(), hex->GetWorldLocation() + FVector(0,0,100.0f), 10.0f, 12, FColor::Red, 10.0f, 5.0f);
 				outArray.Add(hex);
 		}
 	}
