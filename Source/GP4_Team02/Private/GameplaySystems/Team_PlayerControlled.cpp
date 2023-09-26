@@ -8,7 +8,7 @@
 void ATeam_PlayerControlled::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	OnVictoryPointsChanged.AddDynamic(GameManager, &UTWS_GameManager::CheckForWin);
 }
 
 void ATeam_PlayerControlled::AddCreationTile(const TObjectPtr<UHexTile_Creation> Tile)

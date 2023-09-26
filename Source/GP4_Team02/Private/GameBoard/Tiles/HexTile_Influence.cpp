@@ -8,7 +8,7 @@
 
 void UHexTile_Influence::ClaimTile(TObjectPtr<ATeam> NewClaimingTeam)
 {
-	if(!NewClaimingTeam) return;
+	if(!NewClaimingTeam || ClaimingTeam) return;
 	if(const TObjectPtr<ATeam_PlayerControlled> PlayerTeam = Cast<ATeam_PlayerControlled>(NewClaimingTeam))
 	{
 		PlayerTeam->AddVictoryPoints(iVictoryPointAwarded);
@@ -22,6 +22,7 @@ void UHexTile_Influence::BeginPlay()
 	if(UTWS_GameManager* GameManager = GetWorld()->GetSubsystem<UTWS_GameManager>())
 	{
 		GameManager->OnTurnChanged.AddDynamic(this, &UHexTile_Influence::ResetTile);
+		
 	}
 }
 
