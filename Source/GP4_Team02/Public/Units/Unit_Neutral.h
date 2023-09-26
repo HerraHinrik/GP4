@@ -31,9 +31,13 @@ protected:
 	UFUNCTION()
 	void SetupPatrolArea();
 
+	UFUNCTION()
 	void SetupIndex();
 
 	TArray<TObjectPtr<UTileBase>> GetPartOfRing(TArray<TObjectPtr<UHexTile>> ring, int ringIndex);
+
+	UFUNCTION()
+	void SortPartolArea();
 
 public:
 	UPROPERTY()
@@ -50,6 +54,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void ExecuteCurrentState();
+
+	UFUNCTION(BlueprintCallable)
+	void WasAttacked(AUnitBase* attacker);
 	
 	TArray<TObjectPtr<UTileBase>> GetPatrolArea() const { return PatrolArea; }
 	
