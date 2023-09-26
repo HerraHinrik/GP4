@@ -8,6 +8,7 @@ void ATeam::BeginPlay()
 	Super::BeginPlay();
 	GameManager = GetWorld()->GetSubsystem<UTWS_GameManager>();
 	GameManager->OnTurnChanged.AddDynamic( this, &ATeam::OnTurnChanged );
+	OnUnitsChanged.AddDynamic(this, &ATeam::CheckEndTurn);
 }
 
 
