@@ -31,8 +31,6 @@ protected:
 	UFUNCTION()
 	void SetupPatrolArea();
 
-	UFUNCTION()
-	void SetupIndex();
 
 	TArray<TObjectPtr<UTileBase>> GetPartOfRing(TArray<TObjectPtr<UHexTile>> ring, int ringIndex);
 
@@ -55,6 +53,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ExecuteCurrentState();
 
+	UFUNCTION()
+	void SetupIndex();
+	
 	UFUNCTION(BlueprintCallable)
 	void WasAttacked(AUnitBase* attacker);
 	

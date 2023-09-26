@@ -4,7 +4,7 @@
 
 #include "AI/AI_StateBase.h"
 
-
+// stores a state to be added to the stack next tick
 void UAI_StateMachine::PushNewState(UAI_StateBase* state)
 {
 	if (!state)
@@ -20,6 +20,7 @@ void UAI_StateMachine::PushNewState(UAI_StateBase* state)
 	// state->OnStateBegin();
 }
 
+// removes the top state and runs it's OnExit function
 void UAI_StateMachine::PopTopState()
 {
 	if (StateStack.IsEmpty())

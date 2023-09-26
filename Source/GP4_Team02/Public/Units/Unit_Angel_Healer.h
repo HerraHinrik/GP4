@@ -28,5 +28,8 @@ public:
 	
 	virtual UUnitAction_Supportive* GetSupportiveAction() override
 	{ return healAction; }
+
+	virtual UUnitAction_Offensive* GetOffensiveAction() override
+	{ return nullptr; }
 	
 };

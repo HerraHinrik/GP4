@@ -70,6 +70,8 @@ public:
 	TArray<TSubclassOf<class ATeam>> TeamTypes;
 	UPROPERTY( BlueprintReadOnly, Category = "Grid")
 	TArray<UHexTile*> NodeTiles;
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "GameManager")
+	float TurnTime = 40.0f;
 
 	//---------------------------------------------------------------------------------------------------//
 	// Debug

@@ -18,8 +18,9 @@ void UAI_State_ReturnToPath::OnStateRunning()
 {
 	Super::OnStateRunning();
 
-	if (AI_Unit->GetCurrentTile() == AI_Unit->GetPatrolArea()[AI_Unit->iPatrolIndex])
+	if (AI_Unit->GetPatrolArea().Contains(AI_Unit->GetCurrentTile()))
 	{
+		AI_Unit->SetupIndex();
 		Machine->PopTopState();
 	}
 	else

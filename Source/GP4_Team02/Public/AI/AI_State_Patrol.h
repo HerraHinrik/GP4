@@ -22,7 +22,7 @@ private:
 	bool GotNextTile();
 
 	UFUNCTION()
-	void FirstCheck();
+	void SetDirection();
 	
 	UFUNCTION()
 	bool CheckForEnemies();
