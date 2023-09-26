@@ -4,6 +4,7 @@
 
 #include "AI/AI_StateBase.h"
 #include "AI/AI_StateMachine.h"
+#include "AI/AI_State_ChasePlayerUnit.h"
 #include "AI/AI_State_Patrol.h"
 #include "GameBoard/GameBoard.h"
 #include "GameBoard/GameBoardUtils.h"
@@ -70,9 +71,11 @@ void AUnit_Neutral::SetupPatrolArea()
 			break;
 		case 12:
 			PatrolArea = GetPartOfRing(hexRing, 1);
+			SortPartolArea();
 			break;
 		case 18:
 			PatrolArea = GetPartOfRing(hexRing, 2);
+			SortPartolArea();
 			break;
 		default:
 			GEngine->AddOnScreenDebugMessage( -1, 1.f, FColor::Red, "No Matching Hex Ring" );	
@@ -83,7 +86,6 @@ void AUnit_Neutral::SetupPatrolArea()
 	{
 		SetupIndex();
 	}
-	
 }
 
 void AUnit_Neutral::SetupIndex()
@@ -92,7 +94,7 @@ void AUnit_Neutral::SetupIndex()
 		return;
 
 	int outIndex = 0;
-	for (TObjectPtr<UTileBase> tile : PatrolArea)
+	for ( TObjectPtr<UTileBase> tile : PatrolArea)
 	{
 		if (tile == CurrentTile)
 		{
@@ -116,7 +118,7 @@ TArray<TObjectPtr<UTileBase>> AUnit_Neutral::GetPartOfRing(TArray<TObjectPtr<UHe
 	{
 		for (TObjectPtr<UHexTile> hex : ring)
 		{
-			UKismetSystemLibrary::DrawDebugSphere(GetWorld(), hex->GetWorldLocation() + FVector(0,0,100.0f), 10.0f, 12, FColor::Red, 10.0f, 5.0f);
+			// UKismetSystemLibrary::DrawDebugSphere(GetWorld(), hex->GetWorldLocation() + FVector(0,0,100.0f), 10.0f, 12, FColor::Red, 10.0f, 5.0f);
 			outArray.Add(hex);
 		}
 		bCircularPatrol = true;
@@ -136,7 +138,7 @@ TArray<TObjectPtr<UTileBase>> AUnit_Neutral::GetPartOfRing(TArray<TObjectPtr<UHe
 
 			//exclude player start tiles
 			if (hexR <= -ringIndex || hexR >= ringIndex)
-				UKismetSystemLibrary::DrawDebugSphere(GetWorld(), hex->GetWorldLocation() + FVector(0,0,100.0f), 10.0f, 12, FColor::Red, 10.0f, 5.0f);
+				// UKismetSystemLibrary::DrawDebugSphere(GetWorld(), hex->GetWorldLocation() + FVector(0,0,100.0f), 10.0f, 12, FColor::Red, 10.0f, 5.0f);
 				outArray.Add(hex);
 		}
 	}
@@ -149,6 +151,56 @@ TArray<TObjectPtr<UTileBase>> AUnit_Neutral::GetPartOfRing(TArray<TObjectPtr<UHe
 	return outArray;
 }
 
+void AUnit_Neutral::SortPartolArea()
+{
+	if (PatrolArea.IsEmpty())
+		return;
+
+	TArray<TObjectPtr<UTileBase>> sortedArea;
+	TArray<TObjectPtr<UTileBase>> unsortedArea = PatrolArea;
+
+	for (int i = 0 ; i < PatrolArea.Num() ; i++)
+	{
+		TObjectPtr<UTileBase> nextTile;
+		int qCoord = 50;
+		int sCoord = -50;
+		
+		for (TObjectPtr<UTileBase> tile : unsortedArea)
+		{
+			TObjectPtr<UHexTile> hex = Cast<UHexTile>(tile);
+			if (!hex)
+				continue;
+
+			if (hex->GetHexCoordinates().Q == qCoord)
+			{
+				if (hex->GetHexCoordinates().S > sCoord)
+				{
+					qCoord = hex->GetHexCoordinates().Q;
+					sCoord = hex->GetHexCoordinates().S;
+					nextTile = tile;	
+				}
+			}
+			
+			if (hex->GetHexCoordinates().Q < qCoord)
+			{
+				qCoord = hex->GetHexCoordinates().Q;
+				sCoord = hex->GetHexCoordinates().S;
+				nextTile = tile;
+			}
+		}
+
+		if (nextTile)
+		{
+			sortedArea.Add(nextTile);
+			unsortedArea.Remove(nextTile);
+		}
+	}
+
+	if (sortedArea.Num() == PatrolArea.Num())
+	{
+		PatrolArea = sortedArea;
+	}
+}
 bool AUnit_Neutral::CheckTargetInRange()
 {
 	//if there is no target we can't check if it's in range, can we ?
@@ -181,12 +233,14 @@ bool AUnit_Neutral::CheckTargetInRange()
 
 void AUnit_Neutral::ExecuteCurrentState()
 {
+	//if a new state is waiting to be pushed, push that state
 	if (StateMachine->NextState)
 	{
 		StateMachine->StateStack.Add(StateMachine->NextState);
 		StateMachine->NextState = nullptr;
 	}
-	
+
+	//get the top state and start running that state
 	TObjectPtr<UAI_StateBase> state = StateMachine->GetCurrentState();
 	if (state)
 	{
@@ -197,10 +251,21 @@ void AUnit_Neutral::ExecuteCurrentState()
 		bFinishedMyTurn = true;
 	}
 
+	//if unit is out of actions end our turn
 	if (iUnitActionPoints <= 0)
 	{
 		bFinishedMyTurn = true;
 	}
+}
+
+void AUnit_Neutral::WasAttacked(AUnitBase* attacker)
+{
+	if (TargetUnit && TargetUnit == attacker)
+		return;
+
+	TargetUnit = attacker;
+	TObjectPtr<UAI_State_ChasePlayerUnit> chaseState = NewObject<UAI_State_ChasePlayerUnit>();
+	StateMachine->PushNewState(chaseState);
 }
 
 void AUnit_Neutral::ResetUnit()
