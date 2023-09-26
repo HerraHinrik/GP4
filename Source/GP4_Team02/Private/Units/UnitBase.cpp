@@ -39,18 +39,9 @@ void AUnitBase::Tick(float DeltaTime)
 
 void AUnitBase::OnActionCompleted()
 {
-	bool bEndTurn = true;
-	for (TObjectPtr<AUnitBase> Unit : myTeam->Units)
+	if (iUnitActionPoints <= 0)
 	{
-		if(Unit->GetRemainingActionPoints() > 0)
-		{
-			bEndTurn = false;
-			break;
-		}
-	}
-	if(bEndTurn)
-	{
-		GetWorld()->GetSubsystem<UTWS_GameManager>()->EndTurn();
+		myTeam->CheckEndTurn();
 	}
 }
 

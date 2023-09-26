@@ -9,8 +9,6 @@ void ATeam_PlayerControlled::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	// Set spawn points to the start units amount
-	iSpawnPoints = iUnitStartAmount;
 }
 
 void ATeam_PlayerControlled::AddCreationTile(const TObjectPtr<UHexTile_Creation> Tile)
@@ -59,7 +57,7 @@ TObjectPtr<AUnitBase> ATeam_PlayerControlled::SpawnUnit(TSubclassOf<AUnitBase> U
 	//if(iSpawnPoints <= 0) return nullptr;
 	if(Units.Num() >= MaxUnitsSpawned ) return nullptr;
 
-	iSpawnPoints--;
+	iCreationPoints--;
 	
 	const TObjectPtr<AUnitBase> Unit = Super::SpawnUnit(UnitType);
 
@@ -101,11 +99,3 @@ TArray<TObjectPtr<AUnitBase>> ATeam_PlayerControlled::SpawnStartUnits()
 	return SpawnedUnits;
 }
 
-void ATeam_PlayerControlled::OnTurnChanged()
-{
-	for (TObjectPtr<AUnitBase> Unit : Units)
-	{
-		Unit->ResetUnit();
-	}
-	iSpawnPoints = iMaxSpawnPoints;
-}
