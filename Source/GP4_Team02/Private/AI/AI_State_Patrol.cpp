@@ -51,10 +51,7 @@ bool UAI_State_Patrol::GotNextTile()
 		AI_Unit->iPatrolIndex++;
 		if (AI_Unit->iPatrolIndex >= AI_Unit->GetPatrolArea().Num())
 			AI_Unit->iPatrolIndex = 0;
-		
 	}
-	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red,"Index: " + AI_Unit->iPatrolIndex);
-
 
 	if (TObjectPtr<UTileBase> nextTile = AI_Unit->GetPatrolArea()[AI_Unit->iPatrolIndex])
 	{
@@ -64,9 +61,20 @@ bool UAI_State_Patrol::GotNextTile()
 	return false;
 }
 
+void UAI_State_Patrol::FirstCheck()
+{
+	if (!bFirstTimePatrolling)
+		return;
+
+	int index = AI_Unit->iPatrolIndex;
+	if (index > 3)
+		bIncrementIndex = false;
+
+	bFirstTimePatrolling = false;
+}
+
 bool UAI_State_Patrol::CheckForEnemies()
 {
-
 	if (!AI_Unit)
 		return false;
 
@@ -106,6 +114,8 @@ void UAI_State_Patrol::OnStateRunning()
 {
 	Super::OnStateRunning();
 
+	FirstCheck();
+	
 	if (AI_Unit->GetPatrolArea().IsEmpty() || AI_Unit->GetPatrolArea().Num() <= 0)
 	{
 		AI_Unit->bFinishedMyTurn = true;
