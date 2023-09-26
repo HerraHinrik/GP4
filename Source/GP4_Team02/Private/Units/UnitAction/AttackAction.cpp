@@ -38,55 +38,96 @@ void UAttackAction::StartAction(UTileBase* tile, AUnitBase* unit)
 
 	//cache values
 	UUnitAction::StartAction(tile, unit);
+	moveLink = startTile->GetLinkTo(tile);
+	if (!moveLink)
+		return;
+	Action_TimerDelegate.BindUFunction(this, FName("ExecuteAction"));
+	GetWorld()->GetTimerManager().SetTimerForNextTick(Action_TimerDelegate);
 
-	targetEnemy->ReceiveDamage(Action_Unit->iAttackDamage);
-	if (targetEnemy->bRetaliateWhenAttacked)
-	{
-		Action_Unit->ReceiveDamage(targetEnemy->iAttackDamage);
-	}
-	
-	//if the enemy is dead, move into his tile
-	if (Action_Unit->IsUnitAlive() && !targetEnemy->IsUnitAlive())
-	{
-		moveLink = startTile->GetLinkTo(tile);
-		if (moveLink)
-		{
-			Action_TimerDelegate.BindUFunction(this, FName("ExecuteAction"));
-			GetWorld()->GetTimerManager().SetTimerForNextTick(Action_TimerDelegate);
-		}
-	}
-	else
-	{
-		EndAction();
-	}
-	
+	// Set up the timer for testing
+	ActionTime = 1.0f;
+
 }
 
 void UAttackAction::ExecuteAction()
 {
-	
-	if ( ActionTimer < ActionTime )
+	FVector TargetLocation;
+	FVector StartLocation = Action_Unit->GetActorLocation();
+	float Alpha = 0.0f;
+	// Tick timer
+	ActionTimer += GetWorld()->GetDeltaSeconds();
+	// If targetenemy isnt dead
+	if(targetEnemy && targetEnemy->IsUnitAlive())
 	{
-		// Lerp world position towards target tile over the action time
-		const FVector NewLocation = FMath::Lerp(Action_Unit->GetActorLocation(), moveLink->GetTarget()->GetWorldLocation() + FVector(0,0,Action_Unit->fHeightOffset), ActionTimer / ActionTime);
-		Action_Unit->SetActorLocation(NewLocation);
-		ActionTimer += GetWorld()->GetDeltaSeconds();
-		GetWorld()->GetTimerManager().SetTimerForNextTick(Action_TimerDelegate);
-	}else
+		if ( ActionTimer < ActionTime )
+		{
+			// Move to enemy and do damage
+			if(!bDoneDamage)
+			{
+				if ( ActionTimer < ActionTime * 0.25f )
+				{
+					TargetLocation = moveLink->GetTarget()->GetWorldLocation();
+					StartLocation += FVector(0.0f, 0.0f, Action_Unit->fHeightOffset);
+					Alpha = ActionTimer / (ActionTime * 0.25f);
+				}else
+				{
+					targetEnemy->ReceiveDamage(Action_Unit->iAttackDamage);
+					if (targetEnemy->bRetaliateWhenAttacked)
+					{
+						Action_Unit->ReceiveDamage(targetEnemy->iAttackDamage);
+					}
+					bDoneDamage = true;
+				}
+			}
+			else // Already done damage -> Move back to start tile
+			{
+				TargetLocation = moveLink->GetSource()->GetWorldLocation();
+				StartLocation += FVector(0.0f, 0.0f, Action_Unit->fHeightOffset / 5.0f);
+				Alpha = (ActionTimer - ActionTime * 0.25f) / (ActionTime * 0.75f);
+			}
+			TargetLocation += FVector(0.0f, 0.0f, Action_Unit->fHeightOffset);
+			LerpMoveToTarget(StartLocation, TargetLocation, Alpha);
+		}
+		else
+		{
+			ActionTimer = 0.0f;
+			EndAction();
+			return;
+		}
+	}else if(targetEnemy && !targetEnemy->IsUnitAlive()) // if targetenemy is dead
 	{
-		EndAction();
+		// Move to their tile
+		if ( ActionTimer < ActionTime )
+		{
+			TargetLocation = moveLink->GetTarget()->GetWorldLocation();
+			Alpha = ActionTimer / ActionTime;
+			LerpMoveToTarget(Action_Unit->GetActorLocation(), TargetLocation + FVector(0.0f, 0.0f, Action_Unit->fHeightOffset), Alpha);
+		}
+		else
+		{
+			EndAction();
+			return;
+		}
 	}
+
+	// Schedule next tick
+	GetWorld()->GetTimerManager().SetTimerForNextTick(Action_TimerDelegate);
 }
 
 void UAttackAction::EndAction()
 {
-	//move unit, set new current tile
-	if (Action_Unit && Action_Tile && moveLink)
-	{
-		AGameBoard::PlaceUnitOnTile( Action_Unit, Action_Tile );
-	}
-	
 	//reset cached values
 	moveLink = nullptr;
+	targetEnemy = nullptr;
+	bDoneDamage = false;
+	//call parent
 	Super::EndAction();
+}
+
+void UAttackAction::LerpMoveToTarget(const FVector& CurrentLocation,const FVector& TargetLocation, float Alpha) const
+{
+	// Clamp alpha
+	Alpha = FMath::Clamp(Alpha, 0.0f, 1.0f);
+	const FVector NewLocation = FMath::Lerp(CurrentLocation, TargetLocation, Alpha);
+	Action_Unit->SetActorLocation(NewLocation);
 }

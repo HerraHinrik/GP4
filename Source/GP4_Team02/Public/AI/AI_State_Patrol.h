@@ -17,7 +17,7 @@ private:
 	TObjectPtr<UTileBase> NextTile;
 	bool bIncrementIndex = true;
 
-	TObjectPtr<UTileBase> GetNextTile();
+	bool GotNextTile();
 
 	UFUNCTION()
 	bool CheckForEnemies();

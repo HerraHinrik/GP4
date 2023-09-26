@@ -51,7 +51,7 @@ public:
 private:
 	bool bTurnTimerOn = false;
 	float fTurnRemainingTime;
-	float fTurnMaxTime = 40.0f;
+	float fTurnMaxTime = 5.0f;
 	float fBetweenMaxTime = 3.0f;
 	
 	bool bGameIntroTimerOn = false;

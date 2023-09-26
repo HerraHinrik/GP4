@@ -18,9 +18,11 @@ public:
 	virtual void StartAction(UTileBase* tile, AUnitBase* unit) override;
 
 protected:
+	void LerpMoveToTarget( const FVector& CurrentLocation,const FVector& TargetLocation, float Alpha ) const;
 	virtual void ExecuteAction() override;
 	virtual void EndAction() override;
 
 private:
 	TObjectPtr<ULink> moveLink = nullptr;
+	bool bDoneDamage = false;
 };

@@ -77,7 +77,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Unit Stats")
 	int iMaxHealth;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Unit Stats")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Unit Stats")
 	int iCurrentHealth;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Unit Stats")
@@ -165,5 +165,8 @@ public:
 	void UsedAttack() { bCanAttack = false; }
 
 	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION()
+	void OnActionCompleted();
 };
 
