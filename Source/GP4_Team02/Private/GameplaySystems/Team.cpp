@@ -14,12 +14,15 @@ void ATeam::BeginPlay()
 TObjectPtr<AUnitBase> ATeam::SpawnUnit(TSubclassOf<AUnitBase> UnitType)
 {
 	if(UnitType == nullptr) return nullptr;
+	if (Units.Num() >= MaxUnitsSpawned) return nullptr;
+	if(iCreationPoints <= 0) return nullptr;
 	
 	const TObjectPtr<AUnitBase> Unit = GetWorld()->SpawnActor<AUnitBase>(UnitType);
 	Unit->SetTeam(this);
 	Unit->OnUnitDeath.AddDynamic(this, &ATeam::RemoveDeadUnits);
 	Units.Add(Unit);
 	OnUnitsChanged.Broadcast();
+	iCreationPoints--;
 	return Unit;
 }
 

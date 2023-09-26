@@ -57,8 +57,6 @@ TObjectPtr<AUnitBase> ATeam_PlayerControlled::SpawnUnit(TSubclassOf<AUnitBase> U
 	//if(iSpawnPoints <= 0) return nullptr;
 	if(Units.Num() >= MaxUnitsSpawned ) return nullptr;
 
-	iCreationPoints--;
-	
 	const TObjectPtr<AUnitBase> Unit = Super::SpawnUnit(UnitType);
 
 	// Place unit on creation tile
@@ -81,6 +79,7 @@ TObjectPtr<AUnitBase> ATeam_PlayerControlled::SpawnUnit(TSubclassOf<AUnitBase> U
 		UE_LOG( LogTemp, Warning, TEXT( "ATeam::SpawnUnit: Index %d is out of bounds" ), LastIndex );
 	}
 	
+	iCreationPoints--;
 	return Unit;
 }
 

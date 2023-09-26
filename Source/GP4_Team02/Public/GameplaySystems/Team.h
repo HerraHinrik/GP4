@@ -3,7 +3,6 @@
 
 #include "CoreMinimal.h"
 #include "Containers/Array.h"
-#include "GameBoard/FHexCoordinates.h"
 #include "GameBoard/Tiles/TileBase.h"
 #include "Team.generated.h"
 
@@ -76,8 +75,8 @@ protected:
 	virtual void OnTurnChanged();
 	virtual void BeginPlay() override;
 
-	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "TeamUnits" )
-	int32 iCreationPoints = 0;
+	UPROPERTY( VisibleAnywhere, BlueprintReadWrite, Category = "TeamUnits" )
+	int32 iCreationPoints = 1000;
 
 
 private:
