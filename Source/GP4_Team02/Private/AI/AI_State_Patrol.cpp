@@ -19,6 +19,12 @@ bool UAI_State_Patrol::GotNextTile()
 	if (NextTile && NextTile != AI_Unit->GetCurrentTile())
 		return true;
 
+	if (AI_Unit->GetPatrolArea().Contains(AI_Unit->GetCurrentTile())
+		&& AI_Unit->GetCurrentTile() != AI_Unit->GetPatrolArea()[AI_Unit->iPatrolIndex])
+	{
+		SetDirection();
+	}
+
 	//if we are going back and forth rather than in a circle
 	if (!AI_Unit->bCircularPatrol)
 	{
@@ -61,16 +67,13 @@ bool UAI_State_Patrol::GotNextTile()
 	return false;
 }
 
-void UAI_State_Patrol::FirstCheck()
+void UAI_State_Patrol::SetDirection()
 {
-	if (!bFirstTimePatrolling)
-		return;
-
+	AI_Unit->SetupIndex();
+	
 	int index = AI_Unit->iPatrolIndex;
-	if (index > 3)
+	if (index >= 3)
 		bIncrementIndex = false;
-
-	bFirstTimePatrolling = false;
 }
 
 bool UAI_State_Patrol::CheckForEnemies()
@@ -114,12 +117,17 @@ void UAI_State_Patrol::OnStateRunning()
 {
 	Super::OnStateRunning();
 
-	FirstCheck();
 	
 	if (AI_Unit->GetPatrolArea().IsEmpty() || AI_Unit->GetPatrolArea().Num() <= 0)
 	{
 		AI_Unit->bFinishedMyTurn = true;
 		return;
+	}
+
+	if (bFirstTimePatrolling)
+	{
+		SetDirection();
+		bFirstTimePatrolling = false;
 	}
 	
 	//if we are outside the patrol-area, push return state

@@ -81,11 +81,6 @@ void AUnit_Neutral::SetupPatrolArea()
 			GEngine->AddOnScreenDebugMessage( -1, 1.f, FColor::Red, "No Matching Hex Ring" );	
 			break;
 	}
-
-	if (!PatrolArea.IsEmpty())
-	{
-		SetupIndex();
-	}
 }
 
 void AUnit_Neutral::SetupIndex()
@@ -94,9 +89,11 @@ void AUnit_Neutral::SetupIndex()
 		return;
 
 	int outIndex = 0;
-	for ( TObjectPtr<UTileBase> tile : PatrolArea)
+	const int length = PatrolArea.Num();
+	
+	for (int i = 0; i < length; i++)
 	{
-		if (tile == CurrentTile)
+		if (PatrolArea[i] == CurrentTile)
 		{
 			iPatrolIndex = outIndex;
 			break;
