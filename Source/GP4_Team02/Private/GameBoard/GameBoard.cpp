@@ -19,7 +19,7 @@ void AGameBoard::BeginPlay()
 	const TObjectPtr<UTWS_GameManager> GameManager = GetWorld()->GetSubsystem<UTWS_GameManager>();
 	GameManager->SetGameBoard(this);
 	GameManager->InitializeGame( TeamTypes );
-	
+	GameManager->SetTurnMaxTime(TurnTime);
 }
 
 void AGameBoard::OnConstruction(const FTransform& Transform)

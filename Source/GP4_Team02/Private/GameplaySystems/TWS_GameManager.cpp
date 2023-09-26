@@ -13,7 +13,6 @@
 
 void UTWS_GameManager::OnWorldBeginPlay(UWorld& InWorld)
 {
-	fTurnRemainingTime = fTurnMaxTime;
 	bGameIntroTimerOn = true;
 }
 
@@ -146,6 +145,7 @@ void UTWS_GameManager::GameIntro(float DeltaTime)
 				GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, CurrentTeam->GetTeamName());
 			OnGameStart.Broadcast();
 		}
+		fTurnRemainingTime = fTurnMaxTime;
 	}
 }
 
