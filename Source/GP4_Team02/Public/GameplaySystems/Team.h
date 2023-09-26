@@ -55,7 +55,7 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "TeamUnits" )
 	TArray<TObjectPtr<AUnitBase>> Units;
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "TeamUnits" )
-	int32 iMaxSpawnPoints = 1;
+	int32 iMaxCreationPoints = 1;
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "TeamUnits" )
 	int32 MaxUnitsSpawned;
 
@@ -67,16 +67,24 @@ public:
 	UFUNCTION()
 	void RemoveDeadUnits();
 	TArray<TObjectPtr<AUnitBase>> GetUnits() const { return Units; }
+	void CheckEndTurn();
+
 
 protected:
 	TObjectPtr<UTWS_GameManager> GameManager;
 	UFUNCTION()
 	virtual void OnTurnChanged();
 	virtual void BeginPlay() override;
-	
+
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "TeamUnits" )
+	int32 iCreationPoints = 0;
+
+
 private:
 	void AllUnitsDead();
 	
 	TArray<TObjectPtr<AUnitBase>> UnitPool;
+
+	
 };
 

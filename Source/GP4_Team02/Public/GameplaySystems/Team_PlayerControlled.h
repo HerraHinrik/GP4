@@ -15,7 +15,6 @@ class GP4_TEAM02_API ATeam_PlayerControlled : public ATeam
 	GENERATED_BODY()
 public:
 	virtual void BeginPlay() override;
-	virtual void OnTurnChanged() override;
 	
 	// Spawn Functions
 	virtual TObjectPtr<AUnitBase> SpawnUnit(TSubclassOf<AUnitBase> UnitType) override;
@@ -42,7 +41,6 @@ public:
 private:
 	TArray<TObjectPtr<UHexTile_Creation>> CreationTiles;
 	TArray<FHexCoordinates> CreationTileCoordinates;
-	int32 iSpawnPoints;
 	int32 iVictoryPoints;
 
 };

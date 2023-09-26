@@ -74,8 +74,36 @@ void ATeam::AllUnitsDead()
 
 void ATeam::OnTurnChanged()
 {
-	for (TObjectPtr<AUnitBase> Unit : Units)
+	// if our turn has started, reset our units and creation points
+	if (GameManager->GetCurrentTeam() == this)
 	{
-		Unit->ResetUnit();
+		for (TObjectPtr<AUnitBase> Unit : Units)
+		{
+			Unit->ResetUnit();
+		}
+		iCreationPoints = iMaxCreationPoints;	
+	}
+}
+
+void ATeam::CheckEndTurn()
+{
+	// Check for creationpoints first
+	if (iCreationPoints > 0)
+	{
+		return;
+	}
+	// Check if any units have action points left
+	bool bEndTurn = true;
+	for (const TObjectPtr<AUnitBase> Unit : Units)
+	{
+		if(Unit->GetRemainingActionPoints() > 0)
+		{
+			bEndTurn = false;
+			break;
+		}
+	}
+	if(bEndTurn)
+	{
+		GetWorld()->GetSubsystem<UTWS_GameManager>()->EndTurn();
 	}
 }
