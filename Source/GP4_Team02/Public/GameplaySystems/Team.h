@@ -50,6 +50,8 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ClaimedTiles" )
 	TArray<TObjectPtr<UTile_ClaimableHexTile>> ClaimedTiles;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ClaimedTiles" )
+	UMaterialInterface* ClaimedTileMaterial;	
 	
 	UPROPERTY(BlueprintReadOnly, Category = "TeamUnits" )
 	TArray<TObjectPtr<AUnitBase>> Units;
