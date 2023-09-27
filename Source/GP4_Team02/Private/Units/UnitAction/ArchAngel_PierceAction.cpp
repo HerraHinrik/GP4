@@ -45,7 +45,7 @@ void UArchAngel_PierceAction::StartAction(UTileBase* tile, AUnitBase* unit)
 	rearTile = GameBoardUtils::FindNodeByHexCoordinates(	HexTile->GetHexCoordinates() + directionCoords, tile->GetGameBoardParent()->NodeTiles);
 
 	//cache values, start action
-	UUnitAction::StartAction(tile, unit);
+	Super::StartAction(tile, unit);
 	
 	ExecuteAction();
 }
