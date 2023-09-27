@@ -41,7 +41,7 @@ void UArchDemon_SwipeAction::StartAction(UTileBase* tile, AUnitBase* unit)
 		return;
 
 	//cache values, start action
-	UUnitAction::StartAction(tile, unit);
+	Super::StartAction(tile, unit);
 	
 	//add all overlapping tiles to target array
 	TArray<TObjectPtr<UTileBase>> tilesToSwipe;

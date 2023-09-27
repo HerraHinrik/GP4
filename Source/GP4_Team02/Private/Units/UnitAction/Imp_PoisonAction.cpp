@@ -34,7 +34,7 @@ void UImp_PoisonAction::StartAction(UTileBase* tile, AUnitBase* unit)
 	if (!targetEnemy) { return; }
 
 	//cache values
-	UUnitAction::StartAction(tile, unit);
+	Super::StartAction(tile, unit);
 
 	
 	//poison the enemy

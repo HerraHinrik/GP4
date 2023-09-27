@@ -33,7 +33,7 @@ void UHealer_HealAction::StartAction(UTileBase* tile, AUnitBase* unit)
 	if (!targetAlly) { return; }
 
 	//cache values
-	UUnitAction::StartAction(tile, unit);
+	Super::StartAction(tile, unit);
 
 	
 	//heal the ally

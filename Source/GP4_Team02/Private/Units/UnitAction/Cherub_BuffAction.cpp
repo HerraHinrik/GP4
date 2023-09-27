@@ -34,7 +34,7 @@ void UCherub_BuffAction::StartAction(UTileBase* tile, AUnitBase* unit)
 	if (!targetAlly) { return; }
 	
 	//cache values
-	UUnitAction::StartAction(tile, unit);
+	Super::StartAction(tile, unit);
 
 	
 	//buff the ally
