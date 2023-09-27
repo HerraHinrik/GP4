@@ -16,6 +16,7 @@ public:
 	AUnit_Devil_Imp();
 
 private:
+	UPROPERTY(EditAnywhere)
 	TObjectPtr<UImp_PoisonAction> poisonAction;
 
 public:
