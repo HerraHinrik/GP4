@@ -6,6 +6,7 @@
 #include "GameplaySystems/Team.h"
 #include "GameplaySystems/TWS_GameManager.h"
 #include "Units/UnitConditions/UnitCondition_Base.h"
+#include "Units/UnitConditions/UnitCondition_Poisoned.h"
 
 AUnitBase::AUnitBase()
 {
@@ -77,16 +78,44 @@ void AUnitBase::ResetUnit()
 	bCanSupport = true;
 }
 
+bool AUnitBase::IsInSafeZone()
+{
+	// Check if on a safe tile
+	TObjectPtr<UHexTile_Creation> tile = Cast<UHexTile_Creation>(CurrentTile);
+	if(!tile) return false;
+
+	TSubclassOf<UHexTile_Creation> teamTile = myTeam->CreationTileType;
+	if(!teamTile) return false;
+
+	if(tile.IsA(teamTile)) return true;
+
+	return false;
+}
+
+#pragma region BuffsAndDebuffs
+
 void AUnitBase::UpdateConditions()
 {
+	bool bHasBeenPoisoned = false;
 	TArray<TObjectPtr<UUnitCondition_Base>> persistingConditions;
 	for (TObjectPtr<UUnitCondition_Base> condition : Conditions)
 	{
+		//send event when poison ticks
+		if (TObjectPtr<UUnitCondition_Poisoned> poison = Cast<UUnitCondition_Poisoned>(condition))
+		{
+			bHasBeenPoisoned = true;
+		}
+
+		//if the condition remains, keep it
 		if (condition->OnConditionPersist())
 		{
 			persistingConditions.Add(condition);
 		}
 	}
+	
+	if (bHasBeenPoisoned)
+		OnPoisonTick.Broadcast(CurrentTile);
+	
 	Conditions = persistingConditions;
 }
 
@@ -105,19 +134,7 @@ void AUnitBase::RemoveCondition(UUnitCondition_Base* condition)
 	}
 }
 
-bool AUnitBase::IsInSafeZone()
-{
-	// Check if on a safe tile
-	TObjectPtr<UHexTile_Creation> tile = Cast<UHexTile_Creation>(CurrentTile);
-	if(!tile) return false;
-
-	TSubclassOf<UHexTile_Creation> teamTile = myTeam->CreationTileType;
-	if(!teamTile) return false;
-
-	if(tile.IsA(teamTile)) return true;
-
-	return false;
-}
+#pragma endregion
 
 #pragma region LifeAndDeath
 
