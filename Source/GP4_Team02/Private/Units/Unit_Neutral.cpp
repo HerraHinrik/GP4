@@ -54,8 +54,40 @@ void AUnit_Neutral::Tick(float DeltaSeconds)
 	}
 }
 
+#pragma region PatrolArea
 
 void AUnit_Neutral::SetupPatrolArea()
+{
+	TObjectPtr<UHexTile> current = Cast<UHexTile>(CurrentTile);
+	if (!current) { return; }
+
+	int rCoord = current->GetHexCoordinates().R;
+
+	PatrolArea.Empty();
+	
+	if (FMath::Abs(rCoord) <= 1)
+	{
+		TArray<TObjectPtr<UHexTile>> hexRing = GameBoardUtils::GetHexTileRing(current);
+		for (TObjectPtr<UHexTile> hex : hexRing)
+		{
+			PatrolArea.Add(hex);
+		}
+	}
+	else
+	{
+		for (TObjectPtr<UHexTile> hex : CurrentTile->GetGameBoardParent()->NodeTiles)
+		{
+			if (hex->GetHexCoordinates().R == rCoord)
+			{
+				PatrolArea.Add(hex);
+			}
+		}
+		
+		SortPartolArea();
+	}
+}
+
+void AUnit_Neutral::OldSetupPatrolArea()
 {
 	//get all hexes on our ring
 	TObjectPtr<UHexTile> current = Cast<UHexTile>(CurrentTile);
@@ -203,6 +235,9 @@ void AUnit_Neutral::SortPartolArea()
 		PatrolArea = sortedArea;
 	}
 }
+
+#pragma endregion
+
 bool AUnit_Neutral::CheckTargetInRange()
 {
 	//if there is no target we can't check if it's in range, can we ?
