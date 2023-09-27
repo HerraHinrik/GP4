@@ -15,7 +15,7 @@ class ATeam;
 class UHexTile;
 class UTexture2D;
 
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPoisonTick, UTileBase*, tile);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUnitDeath);
 
 
@@ -47,6 +47,7 @@ protected:
 	TObjectPtr<UTileBase> CurrentTile;
 	UPROPERTY()
 	TArray<TObjectPtr<UUnitCondition_Base>> Conditions;
+
 	
 	virtual void BeginPlay() override;
 
@@ -60,6 +61,9 @@ protected:
 public:
 	UPROPERTY(BlueprintAssignable)
 	FOnUnitDeath OnUnitDeath;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnPoisonTick OnPoisonTick;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Unit Settings")
 	TObjectPtr<UTexture2D> portrait;
@@ -110,7 +114,7 @@ public:
 			CurrentTile->RemoveUnit();
 		CurrentTile = newTile;
 	}
-
+	
 	UFUNCTION(BlueprintPure)
 	TArray<UUnitCondition_Base*> GetConditions() const { return Conditions; }
 
