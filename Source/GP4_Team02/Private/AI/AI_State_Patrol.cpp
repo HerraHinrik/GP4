@@ -54,9 +54,18 @@ bool UAI_State_Patrol::GotNextTile()
 	}
 	else
 	{
-		AI_Unit->iPatrolIndex++;
-		if (AI_Unit->iPatrolIndex >= AI_Unit->GetPatrolArea().Num())
-			AI_Unit->iPatrolIndex = 0;
+		if (bIncrementIndex)
+		{
+			AI_Unit->iPatrolIndex++;
+			if (AI_Unit->iPatrolIndex >= AI_Unit->GetPatrolArea().Num())
+				AI_Unit->iPatrolIndex = 0;
+		}
+		else
+		{
+			AI_Unit->iPatrolIndex--;
+			if (AI_Unit->iPatrolIndex < 0)
+				AI_Unit->iPatrolIndex = AI_Unit->GetPatrolArea().Num() - 1;
+		}
 	}
 
 	if (TObjectPtr<UTileBase> nextTile = AI_Unit->GetPatrolArea()[AI_Unit->iPatrolIndex])
@@ -72,7 +81,7 @@ void UAI_State_Patrol::SetDirection()
 	AI_Unit->SetupIndex();
 	
 	int index = AI_Unit->iPatrolIndex;
-	if (index >= 2)
+	if (index >= 2 || AI_Unit->bCircularPatrol)
 		bIncrementIndex = false;
 }
 

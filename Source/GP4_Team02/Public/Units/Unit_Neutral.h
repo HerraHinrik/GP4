@@ -30,9 +30,8 @@ protected:
 
 	UFUNCTION()
 	void SetupPatrolArea();
-
-	UFUNCTION()
-	void OldSetupPatrolArea();
+	
+	void Old_Cooler_SetupPatrolArea();
 
 	TArray<TObjectPtr<UTileBase>> GetPartOfRing(TArray<TObjectPtr<UHexTile>> ring, int ringIndex);
 

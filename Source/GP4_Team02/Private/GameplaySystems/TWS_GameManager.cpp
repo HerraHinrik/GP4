@@ -70,7 +70,8 @@ void UTWS_GameManager::	InitializeGame(TArray<TSubclassOf<ATeam>> TeamTypes)
 	}
 	
 	// Set current team
-	CoinFlip();
+	// CoinFlip();
+	CurrentTeam = TeamArray[0];
 
 	OnGameReady.Broadcast();
 }
