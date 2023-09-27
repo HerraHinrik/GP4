@@ -4,6 +4,7 @@
 #include "GameBoard/Tiles/Tile_ClaimableHexTile.h"
 
 #include "GameplaySystems/Team.h"
+#include "Units/UnitBase.h"
 
 void UTile_ClaimableHexTile::ClaimTile(TObjectPtr<ATeam> NewClaimingTeam)
 {
@@ -24,6 +25,14 @@ void UTile_ClaimableHexTile::ClaimTile(TObjectPtr<ATeam> NewClaimingTeam)
 		UMaterialInstanceDynamic* DynamicMaterial = UMaterialInstanceDynamic::Create(ClaimingTeam->ClaimedTileMaterial, this);
 		SetMaterial(0, DynamicMaterial);
 	}
-	
-	
+}
+
+void UTile_ClaimableHexTile::SetOccupyingUnit(AUnitBase* unit)
+{
+	Super::SetOccupyingUnit(unit);
+	OnEnterClaimTile(unit->GetTeam() == ClaimingTeam);
+}
+
+void UTile_ClaimableHexTile::OnEnterClaimTile_Implementation(bool bIsAlreadyOwned)
+{
 }

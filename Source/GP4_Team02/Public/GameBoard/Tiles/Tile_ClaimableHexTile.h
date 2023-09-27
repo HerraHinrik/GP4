@@ -19,10 +19,16 @@ class GP4_TEAM02_API UTile_ClaimableHexTile : public UHexTile
 public:
 	virtual void ClaimTile(TObjectPtr<ATeam> NewClaimingTeam);
 	TObjectPtr<ATeam> GetClaimingTeam() const { return ClaimingTeam; }
-
+	virtual void SetOccupyingUnit(AUnitBase* unit) override;
+	
 	UPROPERTY( BlueprintAssignable )
 	FOnClaimTile OnClaimTileEvent;
 	
 protected:
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Claimable Tile")
+	void OnEnterClaimTile(bool bIsAlreadyOwned);
+	
 	TObjectPtr<ATeam> ClaimingTeam;
+	
+
 };
