@@ -92,7 +92,10 @@ void AAI_Pawn::StackMyUnits()
 	{
 		TObjectPtr<AUnit_Neutral> neutralUnit = Cast<AUnit_Neutral>(myTeam->GetUnits()[i]);
 		if (neutralUnit)
+		{
+			neutralUnit->iTurnLoops = 0;
 			TurnStack.Add(neutralUnit);
+		}
 	}
 	bCanAct = true;
 

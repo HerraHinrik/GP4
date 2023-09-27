@@ -42,6 +42,9 @@ public:
 
 	UPROPERTY()
 	bool bMyTurnToAct = false;
+
+	UPROPERTY()
+	int iTurnLoops = 0;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int iPatrolIndex = 0;
