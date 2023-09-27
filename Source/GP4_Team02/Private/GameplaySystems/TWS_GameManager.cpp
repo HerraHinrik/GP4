@@ -13,7 +13,13 @@
 
 void UTWS_GameManager::OnWorldBeginPlay(UWorld& InWorld)
 {
-	bGameIntroTimerOn = true;
+	TArray<TObjectPtr<AActor>> board;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AGameBoard::StaticClass(), board);
+
+	if (!board.IsEmpty() && board.Num() > 0)
+	{
+		bGameIntroTimerOn = true;
+	}
 }
 
 void UTWS_GameManager::Tick(float DeltaTime)
