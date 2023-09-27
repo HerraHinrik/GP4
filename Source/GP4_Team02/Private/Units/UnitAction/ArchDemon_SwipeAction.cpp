@@ -18,8 +18,7 @@ void UArchDemon_SwipeAction::StartAction(UTileBase* tile, AUnitBase* unit)
 		return;
 
 	TObjectPtr<UTileBase> startTile =  unit->GetCurrentTile();
-	TObjectPtr<AUnit_Devil_ArchDemon> Demon = Cast<AUnit_Devil_ArchDemon>(unit);
-	if (!startTile || !Demon)
+	if (!startTile)
 		return;
 
 	//check if target is in range
@@ -44,21 +43,12 @@ void UArchDemon_SwipeAction::StartAction(UTileBase* tile, AUnitBase* unit)
 	Super::StartAction(tile, unit);
 	
 	//add all overlapping tiles to target array
-	TArray<TObjectPtr<UTileBase>> tilesToSwipe;
-	tilesToSwipe.Add(tile);
+	swipeArea.Add(tile);
 	for (TObjectPtr<UTileBase> neighbourTile : myNeighbours)
 	{
 		if (targetNeighbours.Contains(neighbourTile) && neighbourTile != tile && neighbourTile != unit->GetCurrentTile())
 		{
-			tilesToSwipe.Add(neighbourTile);
-		}
-	}
-
-	for (TObjectPtr<UTileBase> swipeTile : tilesToSwipe)
-	{
-		if (swipeTile->GetOccupyingUnit())
-		{
-			swipeTile->GetOccupyingUnit()->ReceiveDamage(Demon->iAttackDamage);
+			swipeArea.Add(neighbourTile);
 		}
 	}
 
@@ -68,6 +58,14 @@ void UArchDemon_SwipeAction::StartAction(UTileBase* tile, AUnitBase* unit)
 void UArchDemon_SwipeAction::ExecuteAction()
 {
 	Super::ExecuteAction();
+
+	for (TObjectPtr<UTileBase> swipeTile : swipeArea)
+	{
+		if (swipeTile->GetOccupyingUnit())
+		{
+			swipeTile->GetOccupyingUnit()->ReceiveDamage(Action_Unit->iAttackDamage);
+		}
+	}
 	
 	EndAction();
 }

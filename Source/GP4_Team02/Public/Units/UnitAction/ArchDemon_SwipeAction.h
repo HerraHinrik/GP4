@@ -19,4 +19,7 @@ public:
 protected:
 	virtual void ExecuteAction() override;
 	virtual void EndAction() override;
+
+	UPROPERTY()
+	TArray<TObjectPtr<UTileBase>> swipeArea;
 };
