@@ -57,7 +57,6 @@ void UTWS_GameManager::	InitializeGame(TArray<TSubclassOf<ATeam>> TeamTypes)
 		{
 			AIControlledTeamAmount++;
 		}
-		Team->OnVictoryPointsChanged.AddDynamic(this, &UTWS_GameManager::CheckForWin);
 		TeamArray.Add(Team);
 	}
 

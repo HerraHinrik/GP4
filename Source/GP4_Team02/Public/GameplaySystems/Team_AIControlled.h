@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameBoard/FHexCoordinates.h"
 #include "GameplaySystems/Team.h"
 #include "Team_AIControlled.generated.h"
 
