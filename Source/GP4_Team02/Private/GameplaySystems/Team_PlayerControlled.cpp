@@ -54,7 +54,6 @@ void ATeam_PlayerControlled::AppendCreationTileCoordinates(const TArray<FHexCoor
 
 TObjectPtr<AUnitBase> ATeam_PlayerControlled::SpawnUnit(TSubclassOf<AUnitBase> UnitType)
 {
-	//if(iSpawnPoints <= 0) return nullptr;
 	if(Units.Num() >= MaxUnitsSpawned ) return nullptr;
 
 	const TObjectPtr<AUnitBase> Unit = Super::SpawnUnit(UnitType);
@@ -66,9 +65,13 @@ TObjectPtr<AUnitBase> ATeam_PlayerControlled::SpawnUnit(TSubclassOf<AUnitBase> U
 	const int32 LastIndex = Units.Num() - 1;
 	if ( LastIndex >= 0 && LastIndex < NodeTiles.Num()) {
 		// Check if the cast was successful and the pointer is not null
-		const TObjectPtr<UHexTile_Creation> CreationTile =
-			Cast<UHexTile_Creation>(
-				GameBoardUtils::FindNodeByHexCoordinates(CreationTileCoordinates[Units.Num() - 1], NodeTiles));
+		TObjectPtr<UHexTile_Creation> CreationTile;
+		for (FHexCoordinates HexCoord : CreationTileCoordinates)
+		{
+			CreationTile = Cast<UHexTile_Creation>(GameBoardUtils::FindNodeByHexCoordinates(HexCoord, NodeTiles));
+			if(CreationTile && !CreationTile->GetOccupyingUnit())
+				break;
+		}
 		if ( CreationTile ) {
 			// Place the unit on the tile
 			AGameBoard::PlaceUnitOnTile(Unit, CreationTile);
