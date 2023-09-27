@@ -6,6 +6,7 @@
 #include "GameplaySystems/Team.h"
 #include "Team_PlayerControlled.generated.h"
 
+struct FHexCoordinates;
 /**
  * 
  */
