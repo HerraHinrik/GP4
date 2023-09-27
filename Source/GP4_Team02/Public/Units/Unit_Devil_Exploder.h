@@ -16,6 +16,7 @@ public:
 	AUnit_Devil_Exploder();
 
 protected:
+	UPROPERTY(EditAnywhere)
 	TObjectPtr<UExploder_ExplosionAction> explosionAction;
 
 	virtual void SetUnitDead() override;

@@ -17,6 +17,7 @@ public:
 	AUnit_Devil_ArchDemon();
 
 private:
+	UPROPERTY(EditAnywhere)
 	TObjectPtr<UArchDemon_SwipeAction> swipeAction;
 
 public:

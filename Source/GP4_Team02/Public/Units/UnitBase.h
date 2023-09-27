@@ -33,16 +33,16 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<ATeam> myTeam;
-	UPROPERTY()
+	UPROPERTY(EditAnywhere)
 	TObjectPtr<UMoveAction> moveAction;
-	UPROPERTY()
+	UPROPERTY(EditAnywhere)
 	TObjectPtr<UAttackAction> attackAction;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UClaimTileAction> claimTileAction;
 	UPROPERTY()
 	bool bCanAttack = true;
 	UPROPERTY()
 	bool bCanSupport = true;
-	UPROPERTY()
-	TObjectPtr<UClaimTileAction> claimTileAction;
 	UPROPERTY()
 	TObjectPtr<UTileBase> CurrentTile;
 	UPROPERTY()

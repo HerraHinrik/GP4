@@ -17,6 +17,7 @@ public:
 	AUnit_Angel_Healer();
 
 private:
+	UPROPERTY(EditAnywhere)
 	TObjectPtr<UHealer_HealAction> healAction;
 
 public:

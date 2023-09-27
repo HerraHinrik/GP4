@@ -17,6 +17,7 @@ public:
 	AUnit_Angel_Cherub();
 
 private:
+	UPROPERTY(EditAnywhere)
 	TObjectPtr<UCherub_BuffAction> buffAction;
 
 public:

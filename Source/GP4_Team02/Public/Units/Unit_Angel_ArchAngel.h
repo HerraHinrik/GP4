@@ -17,6 +17,7 @@ public:
 	AUnit_Angel_ArchAngel();
 
 private:
+	UPROPERTY(EditAnywhere)
 	TObjectPtr<UArchAngel_PierceAction> pierceAction;
 
 public:
