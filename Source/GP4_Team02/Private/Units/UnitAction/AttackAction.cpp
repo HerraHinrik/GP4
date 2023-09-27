@@ -94,7 +94,7 @@ void UAttackAction::ExecuteAction()
 			EndAction();
 			return;
 		}
-	}else if(targetEnemy && !targetEnemy->IsUnitAlive()) // if targetenemy is dead
+	}else if(targetEnemy && !targetEnemy->IsUnitAlive()) // if target enemy is dead
 	{
 		// Move to their tile
 		if ( ActionTimer < ActionTime )
@@ -105,6 +105,8 @@ void UAttackAction::ExecuteAction()
 		}
 		else
 		{
+			// Place unit on tile
+			AGameBoard::PlaceUnitOnTile(Action_Unit, moveLink->GetTarget());
 			EndAction();
 			return;
 		}
