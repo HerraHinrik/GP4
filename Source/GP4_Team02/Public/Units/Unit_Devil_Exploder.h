@@ -21,7 +21,7 @@ protected:
 	virtual void SetUnitDead() override;
 
 public:
-	UPROPERTY(BlueprintReadWrite, Category = "Explode Action")
+	UPROPERTY(BlueprintReadWrite, Category = "Unit Stats")
 	int iExplosionDamage = 2;
 
 	UFUNCTION(BlueprintCallable)

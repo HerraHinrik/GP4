@@ -20,9 +20,6 @@ private:
 	TObjectPtr<UArchAngel_PierceAction> pierceAction;
 
 public:
-	UPROPERTY(BlueprintReadWrite, Category = "Pierce Action")
-	int iPierceDamage = 2;
-	
 	virtual UUnitAction_Offensive* GetOffensiveAction() override
 	{ return pierceAction; }
 };

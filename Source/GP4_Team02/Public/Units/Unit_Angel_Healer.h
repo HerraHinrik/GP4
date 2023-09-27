@@ -20,10 +20,10 @@ private:
 	TObjectPtr<UHealer_HealAction> healAction;
 
 public:
-	UPROPERTY(BlueprintReadWrite, Category = "Heal Action")
+	UPROPERTY(BlueprintReadWrite, Category = "Unit Stats")
 	int iHealAmount = 2;
 
-	UPROPERTY(BlueprintReadWrite, Category = "Heal Action")
+	UPROPERTY(BlueprintReadWrite, Category = "Unit Stats")
 	int iHealActionRange = 2;
 	
 	virtual UUnitAction_Supportive* GetSupportiveAction() override

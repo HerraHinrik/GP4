@@ -19,14 +19,8 @@ private:
 	TObjectPtr<UImp_PoisonAction> poisonAction;
 
 public:
-	UPROPERTY(BlueprintReadWrite, Category = "Poison Action")
+	UPROPERTY(BlueprintReadWrite, Category = "Unit Stats")
 	int iPoisonDuration = 2;
-
-	UPROPERTY(BlueprintReadWrite, Category = "Poison Action")
-	int iPoisonActionRange = 2;
-
-	UPROPERTY(BlueprintReadWrite, Category = "Poison Action")
-	int iPoisonDamagePerTurn = 1;
 	
 	virtual UUnitAction_Offensive* GetOffensiveAction() override
 	{ return poisonAction; }

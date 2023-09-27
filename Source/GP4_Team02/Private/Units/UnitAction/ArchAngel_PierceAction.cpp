@@ -55,13 +55,13 @@ void UArchAngel_PierceAction::StartAction(UTileBase* tile, AUnitBase* unit)
 	UUnitAction::StartAction(tile, unit);
 
 	//hit the targets
-	targetEnemy->ReceiveDamage(Angel->iPierceDamage);
+	targetEnemy->ReceiveDamage(Angel->iAttackDamage);
 	
 	if (rearTile)
 	{
 		if (TObjectPtr<AUnitBase> secondTarget = rearTile->GetOccupyingUnit())
 		{
-			secondTarget->ReceiveDamage(Angel->iPierceDamage);
+			secondTarget->ReceiveDamage(Angel->iAttackDamage);
 		}
 	}
 

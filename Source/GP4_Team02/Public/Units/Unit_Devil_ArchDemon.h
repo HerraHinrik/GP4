@@ -20,8 +20,6 @@ private:
 	TObjectPtr<UArchDemon_SwipeAction> swipeAction;
 
 public:
-	UPROPERTY(BlueprintReadWrite, Category = "Swipe Action")
-	int iSwipeDamage = 2;
 	
 	virtual UUnitAction_Offensive* GetOffensiveAction() override
 	{ return swipeAction; }

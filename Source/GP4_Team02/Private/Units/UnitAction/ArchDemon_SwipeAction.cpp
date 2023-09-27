@@ -58,7 +58,7 @@ void UArchDemon_SwipeAction::StartAction(UTileBase* tile, AUnitBase* unit)
 	{
 		if (swipeTile->GetOccupyingUnit())
 		{
-			swipeTile->GetOccupyingUnit()->ReceiveDamage(Demon->iSwipeDamage);
+			swipeTile->GetOccupyingUnit()->ReceiveDamage(Demon->iAttackDamage);
 		}
 	}
 

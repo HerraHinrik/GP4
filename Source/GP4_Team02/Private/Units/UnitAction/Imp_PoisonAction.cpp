@@ -25,7 +25,7 @@ void UImp_PoisonAction::StartAction(UTileBase* tile, AUnitBase* unit)
 
 	//check if target is in range
 	TArray<TObjectPtr<UTileBase>> tiles;
-	GameBoardUtils::FindNodesWithinRadius(startTile, imp->iPoisonActionRange, tiles);
+	GameBoardUtils::FindNodesWithinRadius(startTile, imp->iAttackRange, tiles);
 	if (!tiles.Contains(tile))
 		return;
 	
@@ -42,7 +42,7 @@ void UImp_PoisonAction::StartAction(UTileBase* tile, AUnitBase* unit)
 	if (poison)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "Poison!!");
-		targetEnemy->AddCondition(poison, imp->iPoisonDuration, imp->iPoisonDamagePerTurn);
+		targetEnemy->AddCondition(poison, imp->iPoisonDuration, imp->iAttackDamage);
 	}
 
 	ExecuteAction();
