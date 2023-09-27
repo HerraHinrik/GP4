@@ -72,6 +72,8 @@ void AUnit_Neutral::SetupPatrolArea()
 		{
 			PatrolArea.Add(hex);
 		}
+
+		bCircularPatrol = true;
 	}
 	else
 	{
@@ -87,7 +89,7 @@ void AUnit_Neutral::SetupPatrolArea()
 	}
 }
 
-void AUnit_Neutral::OldSetupPatrolArea()
+void AUnit_Neutral::Old_Cooler_SetupPatrolArea()
 {
 	//get all hexes on our ring
 	TObjectPtr<UHexTile> current = Cast<UHexTile>(CurrentTile);
