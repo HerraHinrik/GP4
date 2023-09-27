@@ -96,13 +96,14 @@ bool AUnitBase::IsInSafeZone()
 
 void AUnitBase::UpdateConditions()
 {
+	bool bHasBeenPoisoned = false;
 	TArray<TObjectPtr<UUnitCondition_Base>> persistingConditions;
 	for (TObjectPtr<UUnitCondition_Base> condition : Conditions)
 	{
 		//send event when poison ticks
 		if (TObjectPtr<UUnitCondition_Poisoned> poison = Cast<UUnitCondition_Poisoned>(condition))
 		{
-			OnPoisonTick.Broadcast(CurrentTile);
+			bHasBeenPoisoned = true;
 		}
 
 		//if the condition remains, keep it
@@ -111,6 +112,10 @@ void AUnitBase::UpdateConditions()
 			persistingConditions.Add(condition);
 		}
 	}
+	
+	if (bHasBeenPoisoned)
+		OnPoisonTick.Broadcast(CurrentTile);
+	
 	Conditions = persistingConditions;
 }
 
