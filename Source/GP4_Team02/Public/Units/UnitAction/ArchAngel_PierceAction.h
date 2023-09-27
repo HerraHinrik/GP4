@@ -19,4 +19,7 @@ public:
 protected:
 	virtual void ExecuteAction() override;
 	virtual void EndAction() override;
+
+private:
+	TObjectPtr<UTileBase> rearTile;
 };

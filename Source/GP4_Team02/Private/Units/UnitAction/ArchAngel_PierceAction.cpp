@@ -2,7 +2,10 @@
 
 #include "Units/UnitAction/ArchAngel_PierceAction.h"
 
+#include "GameBoard/GameBoard.h"
 #include "GameBoard/GameBoardUtils.h"
+#include "GameBoard/Tiles/HexTile.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "Units/UnitBase.h"
 #include "Units/Unit_Angel_ArchAngel.h"
 
@@ -18,8 +21,7 @@ void UArchAngel_PierceAction::StartAction(UTileBase* tile, AUnitBase* unit)
 
 	
 	TObjectPtr<UTileBase> startTile =  unit->GetCurrentTile();
-	TObjectPtr<AUnit_Angel_ArchAngel> Angel = Cast<AUnit_Angel_ArchAngel>(unit);
-	if (!startTile || !Angel)
+	if (!startTile)
 		return;
 
 	//check if target is in range
@@ -32,50 +34,40 @@ void UArchAngel_PierceAction::StartAction(UTileBase* tile, AUnitBase* unit)
 	//get first target
 	targetEnemy = tile->GetOccupyingUnit();
 	if (!targetEnemy) { return; }
-
+	
 	//try to find a tile behind first target
-	TObjectPtr<UTileBase> rearTile;
-	FHexCoordinates directionCoords = tile->GetCoordinates() - startTile->GetCoordinates();
+	TObjectPtr<UHexTile> HexTile = Cast<UHexTile>(tile);
+	TObjectPtr<UHexTile> StartHexTile = Cast<UHexTile>(startTile);
+	if(!HexTile || !StartHexTile) return;
 	
-	TArray<TObjectPtr<UTileBase>> myNeighbours;
-	unit->GetAdjacentTiles(myNeighbours);
-	
-	for (TObjectPtr<UTileBase> neighbourTile : myNeighbours)
-	{
-		FHexCoordinates neighbourDirectionCoords = neighbourTile->GetCoordinates() - tile->GetCoordinates();
-		if (directionCoords == neighbourDirectionCoords)
-		{
-			rearTile = neighbourTile;
-			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "Found Pierce Tile");
-			break;
-		}
-	}
+	FHexCoordinates directionCoords = HexTile->GetHexCoordinates() - StartHexTile->GetHexCoordinates();
+
+	rearTile = GameBoardUtils::FindNodeByHexCoordinates(	HexTile->GetHexCoordinates() + directionCoords, tile->GetGameBoardParent()->NodeTiles);
 
 	//cache values, start action
 	UUnitAction::StartAction(tile, unit);
-
-	//hit the targets
-	targetEnemy->ReceiveDamage(Angel->iAttackDamage);
 	
-	if (rearTile)
-	{
-		if (TObjectPtr<AUnitBase> secondTarget = rearTile->GetOccupyingUnit())
-		{
-			secondTarget->ReceiveDamage(Angel->iAttackDamage);
-		}
-	}
-
 	ExecuteAction();
 }
 
 void UArchAngel_PierceAction::ExecuteAction()
 {
 	Super::ExecuteAction();
+	//hit the targets
+	targetEnemy->ReceiveDamage(Action_Unit->iAttackDamage);
 	
+	if (rearTile)
+	{
+		if (TObjectPtr<AUnitBase> secondTarget = rearTile->GetOccupyingUnit())
+		{
+			secondTarget->ReceiveDamage(Action_Unit->iAttackDamage);
+		}
+	}
 	EndAction();
 }
 
 void UArchAngel_PierceAction::EndAction()
 {
+	rearTile = nullptr;
 	Super::EndAction();
 }
