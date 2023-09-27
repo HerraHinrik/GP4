@@ -70,6 +70,7 @@ public:
 	UFUNCTION()
 	void UpdateUnitConditions();
 	TArray<TObjectPtr<AUnitBase>> GetUnits() const { return Units; }
+	UFUNCTION()
 	void CheckEndTurn();
 
 

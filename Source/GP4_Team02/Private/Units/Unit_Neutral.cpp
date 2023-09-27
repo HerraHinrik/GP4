@@ -9,6 +9,7 @@
 #include "GameBoard/GameBoard.h"
 #include "GameBoard/GameBoardUtils.h"
 #include "GameBoard/Tiles/HexTile.h"
+#include "GameBoard/Tiles/Tile_ClaimableHexTile.h"
 #include "GameplaySystems/TWS_GameManager.h"
 #include "Kismet/KismetSystemLibrary.h"
 
@@ -28,8 +29,12 @@ void AUnit_Neutral::BeginPlay()
 		patrolState->Machine = StateMachine;
 		StateMachine->StateStack.Add(patrolState);
 	}
-
-	GetWorld()->GetSubsystem<UTWS_GameManager>()->OnGameReady.AddDynamic(this, &AUnit_Neutral::SetupPatrolArea);
+	const TObjectPtr<UTWS_GameManager> GameManager = GetWorld()->GetSubsystem<UTWS_GameManager>();
+	if(GameManager)
+	{
+		GameManager->OnGameReady.AddDynamic(this, &AUnit_Neutral::SetupPatrolArea);
+		GameManager->OnTurnChanged.AddDynamic(this, &AUnit_Neutral::OnTurnChanged);
+	}
 }
 
 void AUnit_Neutral::Tick(float DeltaSeconds)
@@ -272,6 +277,16 @@ void AUnit_Neutral::ResetUnit()
 	bFinishedMyTurn = false;
 
 	bMyTurnToAct = false;
+}
+
+void AUnit_Neutral::OnTurnChanged()
+{
+	//Check if current tile is claimable
+	if (TObjectPtr<UTile_ClaimableHexTile> Tile = Cast<UTile_ClaimableHexTile>(CurrentTile))
+	{
+		//Claim tile
+		Tile->ClaimTile(myTeam);
+	}
 }
 
 

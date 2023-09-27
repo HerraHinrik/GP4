@@ -31,7 +31,6 @@ protected:
 	UFUNCTION()
 	void SetupPatrolArea();
 
-
 	TArray<TObjectPtr<UTileBase>> GetPartOfRing(TArray<TObjectPtr<UHexTile>> ring, int ringIndex);
 
 	UFUNCTION()
@@ -61,7 +60,6 @@ public:
 	
 	TArray<TObjectPtr<UTileBase>> GetPatrolArea() const { return PatrolArea; }
 	
-
 	TObjectPtr<AUnitBase> GetTargetUnit() const { return TargetUnit; }
 
 	// bool GetFinishedMyTurn() const { return bFinishedMyTurn; }
@@ -74,5 +72,7 @@ public:
 	UFUNCTION()
 	virtual void ResetUnit() override;
 
+	UFUNCTION()
+	void OnTurnChanged();
 	
 };
