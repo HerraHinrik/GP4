@@ -17,31 +17,36 @@ void UExploder_ExplosionAction::StartAction(UTileBase* tile, AUnitBase* unit)
 	
 
 	TObjectPtr<UTileBase> startTile =  unit->GetCurrentTile();
-	TObjectPtr<AUnit_Devil_Exploder> exploder = Cast<AUnit_Devil_Exploder>(unit);
+	exploder = Cast<AUnit_Devil_Exploder>(unit);
 	if (!startTile || !exploder)
 		return;
 
-	//cache values
-	Super::StartAction(tile, unit);
-
 	//damage surrounding units
-	TArray<TObjectPtr<UTileBase>> myNeighbours;
-	unit->GetAdjacentTiles(myNeighbours);
-	for (TObjectPtr<UTileBase> adjacentTile : myNeighbours)
-	{
-		if (adjacentTile->GetOccupyingUnit())
-		{
-			adjacentTile->GetOccupyingUnit()->ReceiveDamage(exploder->iExplosionDamage);
-		}
-	}
+	unit->GetAdjacentTiles(explosionRadius);
+	if (explosionRadius.IsEmpty())
+		return;
+	
+	//cache values, start action
+	Super::StartAction(tile, unit);
 	
 	ExecuteAction();
 }
 
 void UExploder_ExplosionAction::ExecuteAction()
 {
-	Super::ExecuteAction();
+	for (TObjectPtr<UTileBase> adjacentTile : explosionRadius)
+	{
+		if (adjacentTile->GetOccupyingUnit())
+		{
+			adjacentTile->GetOccupyingUnit()->ReceiveDamage(exploder->iExplosionDamage);
+		}
+	}
 
+	if (Action_Tile->GetOccupyingUnit() != Action_Unit)
+	{
+		Action_Tile->GetOccupyingUnit()->ReceiveDamage(exploder->iExplosionDamage);
+	}
+	
 	EndAction();
 }
 

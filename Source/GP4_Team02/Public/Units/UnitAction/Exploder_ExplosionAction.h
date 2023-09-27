@@ -5,6 +5,7 @@
 #include "Units/UnitAction.h"
 #include "Exploder_ExplosionAction.generated.h"
 
+class AUnit_Devil_Exploder;
 /**
  * 
  */
@@ -19,5 +20,11 @@ public:
 protected:
 	virtual void ExecuteAction() override;
 	virtual void EndAction() override;
+
+	UPROPERTY()
+	TArray<TObjectPtr<UTileBase>> explosionRadius;
+
+	UPROPERTY()
+	TObjectPtr<AUnit_Devil_Exploder> exploder;
 	
 };

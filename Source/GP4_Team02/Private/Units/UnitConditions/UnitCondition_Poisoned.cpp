@@ -16,7 +16,12 @@ void UUnitCondition_Poisoned::OnConditionApplied(TObjectPtr<AUnitBase> unit, int
 
 bool UUnitCondition_Poisoned::OnConditionPersist()
 {
-	AffectedUnit->ReceiveDamage(iPotency);
+	if (AffectedUnit)
+	{
+		OnPoisonTick.Broadcast(AffectedUnit->GetCurrentTile());
+		AffectedUnit->ReceiveDamage(iPotency);
+	}
+	
 	return Super::OnConditionPersist();
 }
 
