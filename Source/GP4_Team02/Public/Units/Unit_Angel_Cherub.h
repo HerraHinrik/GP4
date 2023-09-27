@@ -20,13 +20,13 @@ private:
 	TObjectPtr<UCherub_BuffAction> buffAction;
 
 public:
-	UPROPERTY(BlueprintReadWrite, Category = "Buff Action")
+	UPROPERTY(BlueprintReadWrite, Category = "Unit Stats")
 	int iBuffDuration = 1;
 
-	UPROPERTY(BlueprintReadWrite, Category = "Buff Action")
+	UPROPERTY(BlueprintReadWrite, Category = "Unit Stats")
 	int iBuffActionRange = 2;
 
-	UPROPERTY(BlueprintReadWrite, Category = "Buff Action")
+	UPROPERTY(BlueprintReadWrite, Category = "Unit Stats")
 	int iBuffAmount = 1;
 	
 	virtual UUnitAction_Supportive* GetSupportiveAction() override

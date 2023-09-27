@@ -2,7 +2,6 @@
 
 #include <GameBoard/Tiles/TileBase.h>
 #include "CoreMinimal.h"
-#include "../../../../../../../../../Program Files/Epic Games/UE_5.2/Engine/Platforms/Hololens/Source/Runtime/Core/Public/Microsoft/AllowMicrosoftPlatformTypesPrivate.h"
 #include "GameFramework/Actor.h"
 #include "UnitAction/ClaimTileAction.h"
 #include "Units/UnitAction.h"
