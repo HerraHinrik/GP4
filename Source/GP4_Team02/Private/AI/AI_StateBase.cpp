@@ -13,6 +13,11 @@ void UAI_StateBase::OnStateBegin()
 
 void UAI_StateBase::OnStateRunning()
 {
+	AI_Unit->iTurnLoops++;
+	if (AI_Unit->iTurnLoops > 10)
+	{
+		AI_Unit->bFinishedMyTurn = true;
+	}
 }
 
 void UAI_StateBase::OnStateExit()
