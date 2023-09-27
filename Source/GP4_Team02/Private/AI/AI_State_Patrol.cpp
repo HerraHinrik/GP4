@@ -72,7 +72,7 @@ void UAI_State_Patrol::SetDirection()
 	AI_Unit->SetupIndex();
 	
 	int index = AI_Unit->iPatrolIndex;
-	if (index >= 3)
+	if (index >= 2)
 		bIncrementIndex = false;
 }
 

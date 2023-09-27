@@ -16,6 +16,8 @@ void UTile_ClaimableHexTile::ClaimTile(TObjectPtr<ATeam> NewClaimingTeam)
 	ClaimingTeam = NewClaimingTeam;
 	ClaimingTeam->AddClaimedTile(this);
 
+	OnClaimTileEvent.Broadcast();
+	
 	// Set the material of the tile to the material of the claiming team
 	if(ClaimingTeam->ClaimedTileMaterial)
 	{

@@ -12,6 +12,7 @@ void UHexTile_Influence::ClaimTile(TObjectPtr<ATeam> NewClaimingTeam)
 	if(const TObjectPtr<ATeam_PlayerControlled> PlayerTeam = Cast<ATeam_PlayerControlled>(NewClaimingTeam))
 	{
 		PlayerTeam->AddVictoryPoints(iVictoryPointAwarded);
+		OnClaimTileEvent.Broadcast();
 	}
 }
 
