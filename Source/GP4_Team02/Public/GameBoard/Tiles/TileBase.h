@@ -32,7 +32,7 @@ public:
 	ULink* GetLinkTo(TObjectPtr<UTileBase> target);
 
 	// Set/Get Unit
-	void SetOccupyingUnit(AUnitBase* unit) { Unit = unit; }
+	virtual void SetOccupyingUnit(AUnitBase* unit) { Unit = unit; }
 	UFUNCTION( BlueprintCallable, Category = "Tile" )
 	AUnitBase* GetOccupyingUnit() const { return Unit; }
 	// Remove Unit
