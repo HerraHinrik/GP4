@@ -24,6 +24,11 @@ void ATeamPawn::BeginPlay()
 void ATeamPawn::CheckIfMyTurn()
 {
 	bIsMyTurn = GameManager->GetCurrentTeam() == myTeam;
+	myTeam->UpdateUnitConditions();
+	if (bIsMyTurn)
+	{
+		myTeam->bWasMyTurn = true;
+	}
 }
 
 void ATeamPawn::Tick(float DeltaTime)

@@ -71,6 +71,18 @@ void ATeam::RemoveDeadUnits()
 	OnUnitsChanged.Broadcast();
 }
 
+void ATeam::UpdateUnitConditions()
+{
+	if (bWasMyTurn)
+	{
+		for (TObjectPtr<AUnitBase> Unit : Units)
+		{
+			Unit->UpdateConditions();
+		}
+	}
+	bWasMyTurn = false;
+}
+
 void ATeam::AllUnitsDead()
 {
 	GameManager->CheckForWin();
@@ -85,7 +97,7 @@ void ATeam::OnTurnChanged()
 		{
 			Unit->ResetUnit();
 		}
-		iCreationPoints = iMaxCreationPoints;	
+		iCreationPoints = iMaxCreationPoints;
 	}
 }
 

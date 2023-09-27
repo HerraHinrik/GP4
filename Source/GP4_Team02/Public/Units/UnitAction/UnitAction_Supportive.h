@@ -12,6 +12,9 @@ class GP4_TEAM02_API UUnitAction_Supportive : public UUnitAction
 {
 	GENERATED_BODY()
 
+public:
+	virtual void StartAction(UTileBase* tile, AUnitBase* unit) override;
+	
 protected:
     TObjectPtr<AUnitBase> targetAlly;
 

@@ -58,6 +58,8 @@ public:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "TeamUnits" )
 	int32 MaxUnitsSpawned;
 
+	UPROPERTY()
+	bool bWasMyTurn = false;
 
 	UPROPERTY(BlueprintAssignable)
 	FOnUnitsChanged OnUnitsChanged;
@@ -65,6 +67,8 @@ public:
 	FOnVictoryPointsChanged OnVictoryPointsChanged;
 	UFUNCTION()
 	void RemoveDeadUnits();
+	UFUNCTION()
+	void UpdateUnitConditions();
 	TArray<TObjectPtr<AUnitBase>> GetUnits() const { return Units; }
 	void CheckEndTurn();
 

@@ -18,6 +18,8 @@ public:
 protected:
 	TObjectPtr<UExploder_ExplosionAction> explosionAction;
 
+	virtual void SetUnitDead() override;
+
 public:
 	UPROPERTY(BlueprintReadWrite, Category = "Explode Action")
 	int iExplosionDamage = 2;

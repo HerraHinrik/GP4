@@ -2,6 +2,7 @@
 
 #include <GameBoard/Tiles/TileBase.h>
 #include "CoreMinimal.h"
+#include "../../../../../../../../../Program Files/Epic Games/UE_5.2/Engine/Platforms/Hololens/Source/Runtime/Core/Public/Microsoft/AllowMicrosoftPlatformTypesPrivate.h"
 #include "GameFramework/Actor.h"
 #include "UnitAction/ClaimTileAction.h"
 #include "Units/UnitAction.h"
@@ -40,6 +41,8 @@ protected:
 	UPROPERTY()
 	bool bCanAttack = true;
 	UPROPERTY()
+	bool bCanSupport = true;
+	UPROPERTY()
 	TObjectPtr<UClaimTileAction> claimTileAction;
 	UPROPERTY()
 	TObjectPtr<UTileBase> CurrentTile;
@@ -51,9 +54,9 @@ protected:
 	UFUNCTION()
 	void ChangeCurrentHealth(int change);
 	UFUNCTION()
-	void SetUnitDead();
+	 virtual void SetUnitDead();
 	UFUNCTION()
-	void SetUnitAlive();
+	virtual void SetUnitAlive();
 
 public:
 	UPROPERTY(BlueprintAssignable)
@@ -141,9 +144,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool CanAffordAction(int actionCost);
-
-	UFUNCTION(BlueprintCallable)
-	bool CanAttack() { return bCanAttack; }
 	
 	UFUNCTION(BlueprintCallable)
 	void ConsumeActionPoints(int actionCost) { iUnitActionPoints -= actionCost;}
@@ -160,9 +160,20 @@ public:
 
 	void virtual ResetUnit();
 
+	UFUNCTION()
 	void UpdateConditions();
 
+	UFUNCTION(BlueprintCallable)
+	bool CanAttack() { return bCanAttack; }
+	
+	UFUNCTION()
 	void UsedAttack() { bCanAttack = false; }
+
+	UFUNCTION(BlueprintCallable)
+	bool CanSupport() { return bCanSupport; }
+	
+	UFUNCTION()
+	void UsedSupport() { bCanSupport = false; }
 
 	virtual void Tick(float DeltaTime) override;
 

@@ -74,6 +74,7 @@ void AUnitBase::ResetUnit()
 {
 	iUnitActionPoints = iMaxActionPoints;
 	bCanAttack = true;
+	bCanSupport = true;
 }
 
 void AUnitBase::UpdateConditions()

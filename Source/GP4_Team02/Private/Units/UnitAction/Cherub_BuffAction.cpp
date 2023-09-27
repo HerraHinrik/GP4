@@ -14,7 +14,7 @@ void UCherub_BuffAction::StartAction(UTileBase* tile, AUnitBase* unit)
 		return;
 
 	//other checks
-	if (!bCanPerformAction || !tile->GetOccupyingUnit())
+	if (!bCanPerformAction || !tile->GetOccupyingUnit() || !unit->CanSupport())
 		return;
 	
 
