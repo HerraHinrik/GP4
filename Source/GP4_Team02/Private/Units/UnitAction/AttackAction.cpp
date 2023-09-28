@@ -16,7 +16,10 @@ void UAttackAction::StartAction(UTileBase* tile, AUnitBase* unit)
 		return;
 
 	//other checks
-	if (!bCanPerformAction || !tile->GetOccupyingUnit() || !unit->CanAttack())
+	if (!bCanPerformAction)
+		return;
+
+	if ( !tile->GetOccupyingUnit() || !unit->CanAttack())
 		return;
 
 
@@ -37,10 +40,7 @@ void UAttackAction::StartAction(UTileBase* tile, AUnitBase* unit)
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "Attack!!");
 
 	//cache values
-	UUnitAction::StartAction(tile, unit);
-	moveLink = startTile->GetLinkTo(tile);
-	if (!moveLink)
-		return;
+	Super::StartAction(tile, unit);
 	Action_TimerDelegate.BindUFunction(this, FName("ExecuteAction"));
 	GetWorld()->GetTimerManager().SetTimerForNextTick(Action_TimerDelegate);
 
@@ -66,7 +66,7 @@ void UAttackAction::ExecuteAction()
 			{
 				if ( ActionTimer < ActionTime * 0.25f )
 				{
-					TargetLocation = moveLink->GetTarget()->GetWorldLocation();
+					TargetLocation = Action_Tile->GetWorldLocation();
 					StartLocation += FVector(0.0f, 0.0f, Action_Unit->fHeightOffset);
 					Alpha = ActionTimer / (ActionTime * 0.25f);
 				}else
@@ -81,7 +81,7 @@ void UAttackAction::ExecuteAction()
 			}
 			else // Already done damage -> Move back to start tile
 			{
-				TargetLocation = moveLink->GetSource()->GetWorldLocation();
+				TargetLocation = Action_Unit->GetCurrentTile()->GetWorldLocation();
 				StartLocation += FVector(0.0f, 0.0f, Action_Unit->fHeightOffset / 5.0f);
 				Alpha = (ActionTimer - ActionTime * 0.25f) / (ActionTime * 0.75f);
 			}
@@ -96,6 +96,12 @@ void UAttackAction::ExecuteAction()
 		}
 	}else if(targetEnemy && !targetEnemy->IsUnitAlive()) // if target enemy is dead
 	{
+		moveLink = Action_Unit->GetCurrentTile()->GetLinkTo(Action_Tile);
+		if (!moveLink)
+		{
+			EndAction();
+			return;
+		}
 		// Move to their tile
 		if ( ActionTimer < ActionTime )
 		{
@@ -120,7 +126,6 @@ void UAttackAction::EndAction()
 {
 	//reset cached values
 	moveLink = nullptr;
-	targetEnemy = nullptr;
 	bDoneDamage = false;
 	//call parent
 	Super::EndAction();

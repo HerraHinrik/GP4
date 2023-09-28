@@ -38,13 +38,13 @@ void UAI_State_ChasePlayerUnit::OnStateRunning()
 	else
 	{
 		//if target is dead leave this state
-		if (!AI_Unit->GetTargetUnit() || !AI_Unit->GetTargetUnit()->IsUnitAlive())
+		if (AI_Unit->GetTargetUnit() && AI_Unit->GetTargetUnit()->IsUnitAlive())
 		{
-			Machine->PopTopState();
+			AI_Unit->GetMoveAction()->StartAction(AI_Unit->GetTargetUnit()->GetCurrentTile(), AI_Unit);
 		}
 		else
 		{
-			AI_Unit->GetMoveAction()->StartAction(AI_Unit->GetTargetUnit()->GetCurrentTile(), AI_Unit);
+			Machine->PopTopState();
 		}
 	}
 }

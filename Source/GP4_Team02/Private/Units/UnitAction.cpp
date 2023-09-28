@@ -40,7 +40,10 @@ void UUnitAction::EndAction()
 	// Consume action points
 	Action_Unit->ConsumeActionPoints(iActionCost);
 	// Select the target tile
-	Action_Unit->GetTeam()->GetPlayerCursor()->SetSelectedTile(Action_Unit->GetCurrentTile());
+	if (Action_Unit->GetTeam()->GetPlayerCursor())
+	{
+		Action_Unit->GetTeam()->GetPlayerCursor()->SetSelectedTile(Action_Unit->GetCurrentTile());
+	}
 
 	Action_Tile = nullptr;
 	Action_Unit = nullptr;
