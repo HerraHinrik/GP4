@@ -124,7 +124,7 @@ void AddPawnToArray(TObjectPtr<ATeamPawn> pawn);
 #pragma region GetterFunctions
 
 	// Get Current Game Board
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	AGameBoard* GetGameBoard() const { return GameBoard; }
 	
 	//current team name
