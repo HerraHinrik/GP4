@@ -1,7 +1,9 @@
 ﻿#include "GameBoard/HighlightSystem.h"
 
+#include "GameBoard/GameBoard.h"
 #include "GameBoard/GameBoardUtils.h"
 #include "GameBoard/Link.h"
+#include "GameBoard/Tiles/HexTile_Creation.h"
 #include "GameBoard/Tiles/TileBase.h"
 #include "GameplaySystems/TWS_GameManager.h"
 #include "Units/UnitBase.h"
@@ -12,7 +14,13 @@ void UHighlightSystem::Init(TObjectPtr<UTWS_GameManager> GameManager)
 	{
 		GameManager->OnTurnChanged.AddDynamic(this, &UHighlightSystem::ResetAllHighLights);
 	}
-
+	for (TObjectPtr<UHexTile> NodeTile : GameManager->GetGameBoard()->NodeTiles)
+	{
+		if(TObjectPtr<UHexTile_Creation> CreationTile = Cast<UHexTile_Creation>(NodeTile))
+		{
+			CreationTiles.Add(CreationTile);
+		}
+	}
 	
 }
 
@@ -84,6 +92,21 @@ void UHighlightSystem::SetHoverTile(TObjectPtr<UTileBase> Tile)
 	}
 }
 
+void UHighlightSystem::HighLightCreationTiles(ATeam* Team)
+{
+	for (const TObjectPtr<UHexTile_Creation> Tile : CreationTiles)
+	{
+		if(Tile->GetOwningTeam() == Team)
+		{
+			Tile->OnHighLightCreation.Broadcast(true);
+		}
+		else
+		{
+			Tile->OnHighLightCreation.Broadcast(false);
+		}
+	}
+}
+
 void UHighlightSystem::ResetAllHighLights()
 {
 	if(SelectedTile)
@@ -113,4 +136,12 @@ void UHighlightSystem::ResetNeighbourHighLight()
 		Tile->OnNeighbour.Broadcast(false);
 	}
 	NeighbourTiles.Empty();
+}
+
+void UHighlightSystem::ResetCreationTilesHighLight()
+{
+	for (const TObjectPtr<UHexTile_Creation> Tile : CreationTiles)
+	{
+		Tile->OnHighLightCreation.Broadcast(false);
+	}
 }

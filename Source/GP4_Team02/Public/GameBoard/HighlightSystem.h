@@ -17,16 +17,22 @@ public:
 
 	void SetSelectedTile(TObjectPtr<UTileBase> Tile);
 	void SetHoverTile(TObjectPtr<UTileBase> Tile);
+	UFUNCTION(BlueprintCallable)
+	void HighLightCreationTiles(class ATeam* Team);
 
 	UFUNCTION()
 	void ResetAllHighLights();
+	UFUNCTION()
 	void ResetHoveredHighLight();
+	UFUNCTION()
 	void ResetNeighbourHighLight();
+	UFUNCTION()
+	void ResetCreationTilesHighLight();
 
 private:
-	TArray<TObjectPtr<UTileBase>> Tiles;
 	TArray<TObjectPtr<UTileBase>> HoveredTiles;
 	TArray<TObjectPtr<UTileBase>> NeighbourTiles;
+	TArray<TObjectPtr<class UHexTile_Creation>> CreationTiles;
 	TObjectPtr<UTileBase> SelectedTile;
 	
 };

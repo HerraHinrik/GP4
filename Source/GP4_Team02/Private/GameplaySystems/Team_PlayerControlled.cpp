@@ -14,6 +14,8 @@ void ATeam_PlayerControlled::BeginPlay()
 void ATeam_PlayerControlled::AddCreationTile(const TObjectPtr<UHexTile_Creation> Tile)
 {
 	if(!Tile) return;
+
+	Tile->SetOwningTeam(this);
 	if(!CreationTiles.Contains(Tile))
 		CreationTiles.Add(Tile);
 	
