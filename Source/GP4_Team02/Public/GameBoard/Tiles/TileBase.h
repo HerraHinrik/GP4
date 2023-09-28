@@ -59,7 +59,9 @@ public:
 
 	// Select tile
 	virtual void SelectTile(bool bSelected);
-	virtual void HoverTile(bool bHovered);
+
+	// Hover tile
+	void HoverTile(bool bHovered);
 	
 	// Set/Get Parent GameBoard
 	void SetGameBoardParent(const TObjectPtr<AGameBoard> GameBoard) { ParentGameBoard = GameBoard; }
@@ -67,6 +69,8 @@ public:
 
 	// Reset A* variables
 	void ResetAStarVariables() { ParentNode = nullptr; GCost = 0.0f; HCost = 0.0f; FCost = 0.0f; }
+
+	
 
 	// Virtual Destructor
 	//virtual ~UTileBase() {}

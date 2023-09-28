@@ -1,6 +1,8 @@
 ﻿#include "GameBoard/Tiles/TileBase.h"
 
+#include "GameBoard/GameBoard.h"
 #include "GameBoard/GameBoardUtils.h"
+#include "GameBoard/HighlightSystem.h"
 #include "GameBoard/Link.h"
 #include "GameplaySystems/TWS_GameManager.h"
 #include "Units/UnitBase.h"
@@ -93,11 +95,6 @@ void UTileBase::DestroyTile()
 	for (ULink* Link : GetLinks())
 	{
 		RemoveLink(Link);
-		// if(!Link || Link->IsValidLowLevel())
-		// 	continue;
-		// if(UTileBase* target = Link->GetTarget())
-		// 	target->RemoveLink(this);
-		//UE_LOG( LogTemp, Warning, TEXT("Link removed") );
 	}
 	
 	// Destroy the tile
@@ -106,19 +103,13 @@ void UTileBase::DestroyTile()
 
 void UTileBase::SelectTile(bool bSelected)
 {
-	OnTileSelected.Broadcast(bSelected);
-
-	// Check has occupied unit
-	if (bSelected && GetOccupyingUnit())
-	{
-		if (GetOccupyingUnit()->GetTeam() != GetWorld()->GetSubsystem<UTWS_GameManager>()->GetCurrentTeam())
-			return;
-		TArray<UTileBase*> Neighbours;
-	}
-
+	const TObjectPtr<UTileBase> SelectedTile = bSelected ? this : nullptr;
+	ParentGameBoard->HighlightSystem->SetSelectedTile(SelectedTile);
 }
 
 void UTileBase::HoverTile(bool bHovered)
 {
-	OnTileHovered.Broadcast(bHovered);
+	ParentGameBoard->HighlightSystem->SetHoverTile(this);
 }
+
+

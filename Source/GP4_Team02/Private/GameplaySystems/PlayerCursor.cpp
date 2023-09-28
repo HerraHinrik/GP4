@@ -2,8 +2,8 @@
 
 #include "GameplaySystems/PlayerCursor.h"
 
-#include "GameBoard/GameBoardUtils.h"
-#include "GameBoard/Link.h"
+#include "GameBoard/GameBoard.h"
+#include "GameBoard/HighlightSystem.h"
 #include "GameplaySystems/PlayerInputController.h"
 #include "GameplaySystems/TWS_GameManager.h"
 #include "Units/UnitBase.h"
@@ -13,13 +13,11 @@
 APlayerCursor::APlayerCursor()
 {
 	PrimaryActorTick.bCanEverTick = true;
-
 }
 
 void APlayerCursor::BeginPlay()
 {
 	Super::BeginPlay();
-	
 	Controller = Cast<APlayerInputController>(GetController());
 }
 
@@ -49,6 +47,8 @@ bool APlayerCursor::SelectUnit(TObjectPtr<UTileBase> Tile)
 		SelectedTile->SelectTile(true);
 		SelectedUnit = unitOnTile;
 		bGotNewUnit = true;
+		HoveredTile->GetGameBoardParent()->HighlightSystem->SetSelectedTile(HoveredTile);
+
 	}
 	return bGotNewUnit;
 }
@@ -57,24 +57,24 @@ bool APlayerCursor::SelectTile(TObjectPtr<UTileBase> Tile)
 {
 		if (Tile)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "Select Tile");
 
-			if(SelectedTile)
-				SelectedTile->SelectTile(false);
-			
-			SelectedTile = Tile;
-			Tile->SelectTile(true);
+			// If we have a previous selected tile, deselect it
+			SetSelectedTile(Tile);
+
+			// If we have a selected unit, check which action is appropriate and see if we can perform the action
 			if (SelectedUnit && SelectedTile)
 			{
-				if (!SelectedTile->GetOccupyingUnit())
+				if (!SelectedTile->GetOccupyingUnit()) // If the tile is empty
 				{
 					SelectedAction = SelectedUnit->GetMoveAction();
 				}
 				else 
 				{
-					if(SelectedTile->GetOccupyingUnit()->GetTeam() != myTeam)
+					if(SelectedTile->GetOccupyingUnit()->GetTeam() != myTeam)	// If the tile is occupied by an enemy
+					{
 						SelectedAction = SelectedUnit->GetOffensiveAction();
-					else
+					}
+					else														// If the tile is occupied by an ally
 					{
 						SelectedAction = SelectedUnit->GetSupportiveAction();
 					}
@@ -85,8 +85,6 @@ bool APlayerCursor::SelectTile(TObjectPtr<UTileBase> Tile)
 					PerformAction();
 				}
 			}
-			// Debug Sphere on tile
-			//UKismetSystemLibrary::DrawDebugSphere(GetWorld(), Tile->GetWorldLocation() + FVector(0,0,100.0f), 10.0f, 12, FColor::Red, 10.0f, 5.0f
 		}
 	if (SelectedTile) { return true; }
 	
@@ -102,42 +100,39 @@ bool APlayerCursor::SelectAction(TObjectPtr<UUnitAction>)
 
 void APlayerCursor::SelectTarget()
 {
+	// Make sure myTeam is set
 	if (!myTeam && Controller)
 		myTeam = Controller->GetTeam();
 
-	
-	// if (GameManager->GetCurrentTeam() != GetTeam() || !GameManager->GetTurnActive())
+	// Make sure it's my turn
 	if (!bIsMyTurn)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "Not Your Turn");
 		return;	
 	}
 
-	if (!SelectedUnit || !SelectedUnit->GetSupportiveAction() || SelectedUnit->GetRemainingActionPoints() <= 0)
+	
+	if (!SelectedUnit || // If we don't have a selected unit
+		!SelectedUnit->GetSupportiveAction() || // If the selected unit doesn't have a supportive action
+		SelectedUnit->GetRemainingActionPoints() <= 0) // If the selected unit doesn't have any action points left
 	{
-		if (SelectUnit(HoveredTile)) { return; }
+		if (SelectUnit(HoveredTile)) { return; } // If we can select a new unit, select it and return
 	}
 
-	if (SelectTile(HoveredTile)) { return; }
+	if (SelectTile(HoveredTile)) { return; } // If we can select a new tile, select it and return
 
 }
 
 void APlayerCursor::DeselectTarget()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "Deselect");
-	
 	SelectedUnit = nullptr;
-
 	if (SelectedTile)
 	{
 		SelectedTile->SelectTile(false);
 		SelectedTile = nullptr;
 	}
-	
-
 	SelectedAction = nullptr;
 }
-
 
 #pragma endregion
 
@@ -213,30 +208,13 @@ void APlayerCursor::UpdateHoveredTile()
 				// If the tile is not the same as the hovered tile
 				if (Tile != HoveredTile)
 				{
-					// If we had a hovered tile before
-					if (HoveredTile)
-					{
-						HoveredTile->HoverTile(false);
-						for (TObjectPtr<ULink> Link : PathLinks)
-						{
-							if(Link)
-								Link->GetTarget()->HoverTile(false);
-						}
-					}
-					
 					HoveredTile = Tile;
-					HoveredTile->HoverTile(true);
-					if(SelectedUnit)
-					{
-						PathLinks = GameBoardUtils::FindPathInHexGrid(SelectedUnit->GetCurrentTile(), HoveredTile);
+			
+					HoveredTile->GetGameBoardParent()->HighlightSystem->SetHoverTile(HoveredTile);
 					
-						for (TObjectPtr<ULink> Link : PathLinks)
-						{
-							Link->GetTarget()->HoverTile(true);
-						}
-					}
 					break;
 				}
+
 			}
 		}
 	}
