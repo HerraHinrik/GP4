@@ -8,20 +8,13 @@
 #include "GameplaySystems/TWS_GameManager.h"
 #include "Units/UnitBase.h"
 
-void UHighlightSystem::Init(TObjectPtr<UTWS_GameManager> GameManager)
+void UHighlightSystem::Init(TObjectPtr<UTWS_GameManager> InGameManager)
 {
-	if (GameManager)
+	if (InGameManager)
 	{
-		GameManager->OnTurnChanged.AddDynamic(this, &UHighlightSystem::ResetAllHighLights);
+		this->GameManager = InGameManager;
+		InGameManager->OnTurnChanged.AddDynamic(this, &UHighlightSystem::ResetAllHighLights);
 	}
-	for (TObjectPtr<UHexTile> NodeTile : GameManager->GetGameBoard()->NodeTiles)
-	{
-		if(TObjectPtr<UHexTile_Creation> CreationTile = Cast<UHexTile_Creation>(NodeTile))
-		{
-			CreationTiles.Add(CreationTile);
-		}
-	}
-	
 }
 
 void UHighlightSystem::SetSelectedTile(TObjectPtr<UTileBase> Tile)
@@ -94,9 +87,11 @@ void UHighlightSystem::SetHoverTile(TObjectPtr<UTileBase> Tile)
 
 void UHighlightSystem::HighLightCreationTiles(ATeam* Team)
 {
+
 	for (const TObjectPtr<UHexTile_Creation> Tile : CreationTiles)
 	{
-		if(Tile->GetOwningTeam() == Team)
+		TObjectPtr<ATeam> TileTeam = Tile->GetOwningTeam();
+		if(TileTeam == Team)
 		{
 			Tile->OnHighLightCreation.Broadcast(true);
 		}

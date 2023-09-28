@@ -4,9 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "HexTile.h"
+#include "GameBoard/GameBoard.h"
+#include "GameBoard/HighlightSystem.h"
 #include "HexTile_Creation.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam( FOnHighLightCreation, bool, bClaimed );
+class ATeam;
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHighLightCreation, bool, bClaimed);
 
 UCLASS()
 class GP4_TEAM02_API UHexTile_Creation : public UHexTile
@@ -14,17 +17,32 @@ class GP4_TEAM02_API UHexTile_Creation : public UHexTile
 	GENERATED_BODY()
 
 public:
-	void AddConnectedTile(const TObjectPtr<UHexTile_Creation> NewConnectedTile) { ConnectedTiles.Add(NewConnectedTile); }
-	void RemoveConnectedTile(const TObjectPtr<UHexTile_Creation> NewConnectedTile) { ConnectedTiles.Remove(NewConnectedTile); }
-	TSet<TObjectPtr<UHexTile_Creation>> GetConnectedTiles() const { return ConnectedTiles; }
+	virtual void AddLink(ULink* link) override;
+	
+	void AddConnectedTile(const TObjectPtr<UHexTile_Creation> NewConnectedTile)
+	{
+		if(ConnectedTiles.Contains(NewConnectedTile))
+		{
+			return;
+		}
+		ConnectedTiles.Add(NewConnectedTile);
+		// Make sure the other tile knows about this tile as well
+		NewConnectedTile->AddConnectedTile(this);
+	}
+	TArray<TObjectPtr<UHexTile_Creation>> GetConnectedTiles() const { return ConnectedTiles; }
 
 	void SetOwningTeam(const TObjectPtr<ATeam> NewOwningTeam) { OwningTeam = NewOwningTeam; }
 	TObjectPtr<ATeam> GetOwningTeam() const { return OwningTeam; }
+	
+	virtual void SetGameBoardParent(const TObjectPtr<AGameBoard> GameBoard) override { Super::SetGameBoardParent(GameBoard); GameBoard->HighlightSystem->AddCreationTile(this); }
+
 
 	UPROPERTY(BlueprintAssignable)
 	FOnHighLightCreation OnHighLightCreation;
 	
 private:
-	TSet<TObjectPtr<UHexTile_Creation>> ConnectedTiles;
+	TArray<TObjectPtr<UHexTile_Creation>> ConnectedTiles;
 	TObjectPtr<ATeam> OwningTeam;
 };
+
+

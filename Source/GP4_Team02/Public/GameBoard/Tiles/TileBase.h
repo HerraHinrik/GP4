@@ -24,7 +24,7 @@ public:
 
 	// Link functions
 	static ULink* CreateLink(TObjectPtr<UTileBase> Source, TObjectPtr<UTileBase> Target);
-	void AddLink(ULink* link);
+	virtual void AddLink(ULink* link);
 	void AddLink(TObjectPtr<UTileBase> source, TObjectPtr<UTileBase> target);
 	void RemoveLink(ULink* link);
 	void RemoveLink(TObjectPtr<UTileBase> target);
@@ -64,7 +64,7 @@ public:
 	void HoverTile(bool bHovered);
 	
 	// Set/Get Parent GameBoard
-	void SetGameBoardParent(const TObjectPtr<AGameBoard> GameBoard) { ParentGameBoard = GameBoard; }
+	virtual void SetGameBoardParent(const TObjectPtr<AGameBoard> GameBoard) { ParentGameBoard = GameBoard; }
 	TObjectPtr<AGameBoard> GetGameBoardParent() const { return ParentGameBoard; }
 
 	// Reset A* variables

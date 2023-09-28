@@ -14,8 +14,6 @@ void ATeam_PlayerControlled::BeginPlay()
 void ATeam_PlayerControlled::AddCreationTile(const TObjectPtr<UHexTile_Creation> Tile)
 {
 	if(!Tile) return;
-
-	Tile->SetOwningTeam(this);
 	if(!CreationTiles.Contains(Tile))
 		CreationTiles.Add(Tile);
 	
@@ -60,6 +58,20 @@ TObjectPtr<AUnitBase> ATeam_PlayerControlled::SpawnUnit(TSubclassOf<AUnitBase> U
 
 	const TObjectPtr<AUnitBase> Unit = Super::SpawnUnit(UnitType);
 
+	// Ensure that CreationTiles are all set <- Last minute hack
+	if(CreationTiles.Num() == 0)
+	{
+		for (FHexCoordinates CreationTileCoordinate : CreationTileCoordinates)
+		{
+			if(const TObjectPtr<UHexTile_Creation> CreationTile =
+				Cast<UHexTile_Creation>(GameBoardUtils::FindNodeByHexCoordinates(CreationTileCoordinate, GameManager->GetGameBoard()->NodeTiles)))
+			{
+				AddCreationTile(CreationTile);
+				CreationTile->SetOwningTeam(this);
+			}
+		}
+	}
+	
 	// Place unit on creation tile
 	const TArray<UHexTile*>& NodeTiles = GameManager->GetGameBoard()->NodeTiles;
 
@@ -68,9 +80,9 @@ TObjectPtr<AUnitBase> ATeam_PlayerControlled::SpawnUnit(TSubclassOf<AUnitBase> U
 	if ( LastIndex >= 0 && LastIndex < NodeTiles.Num()) {
 		// Check if the cast was successful and the pointer is not null
 		TObjectPtr<UHexTile_Creation> CreationTile;
-		for (FHexCoordinates HexCoord : CreationTileCoordinates)
+		for (TObjectPtr<UHexTile_Creation> Tile : CreationTiles)
 		{
-			CreationTile = Cast<UHexTile_Creation>(GameBoardUtils::FindNodeByHexCoordinates(HexCoord, NodeTiles));
+			CreationTile = Tile;
 			if(CreationTile && !CreationTile->GetOccupyingUnit())
 				break;
 		}

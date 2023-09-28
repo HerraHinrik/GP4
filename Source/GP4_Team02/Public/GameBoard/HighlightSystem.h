@@ -28,11 +28,14 @@ public:
 	void ResetNeighbourHighLight();
 	UFUNCTION()
 	void ResetCreationTilesHighLight();
+	void AddCreationTile(const TObjectPtr<class UHexTile_Creation> Tile) {	if(!CreationTiles.Contains(Tile)) CreationTiles.Add(Tile); }
 
 private:
+	
 	TArray<TObjectPtr<UTileBase>> HoveredTiles;
 	TArray<TObjectPtr<UTileBase>> NeighbourTiles;
-	TArray<TObjectPtr<class UHexTile_Creation>> CreationTiles;
+	TArray<TObjectPtr<UHexTile_Creation>> CreationTiles;
 	TObjectPtr<UTileBase> SelectedTile;
+	TObjectPtr<UTWS_GameManager> GameManager;
 	
 };
