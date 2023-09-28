@@ -28,6 +28,9 @@ public:
 
 	// Construct the tile grid
 	void ConstructTileGrid(int32 PlayerControlledTeamAmount, int32 AIControlledTeamAmount);
+
+	UFUNCTION(BlueprintCallable)
+	UHighlightSystem* GetHighlightSystem() const { return HighlightSystem; }
 	
 private:
 	virtual void Tick(float DeltaTime) override;
