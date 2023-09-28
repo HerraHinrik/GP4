@@ -21,6 +21,7 @@ public:
 	void SetOwningTeam(const TObjectPtr<ATeam> NewOwningTeam) { OwningTeam = NewOwningTeam; }
 	TObjectPtr<ATeam> GetOwningTeam() const { return OwningTeam; }
 
+	UPROPERTY(BlueprintAssignable)
 	FOnHighLightCreation OnHighLightCreation;
 	
 private:
