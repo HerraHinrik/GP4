@@ -26,7 +26,7 @@ public:
 	void ResetHoveredHighLight();
 	UFUNCTION()
 	void ResetNeighbourHighLight();
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void ResetCreationTilesHighLight();
 	void AddCreationTile(const TObjectPtr<class UHexTile_Creation> Tile) {	if(!CreationTiles.Contains(Tile)) CreationTiles.Add(Tile); }
 
