@@ -304,6 +304,8 @@ void AUnit_Neutral::WasAttacked(AUnitBase* attacker)
 
 	TargetUnit = attacker;
 	TObjectPtr<UAI_State_ChasePlayerUnit> chaseState = NewObject<UAI_State_ChasePlayerUnit>();
+	chaseState->Machine = StateMachine;
+	chaseState->AI_Unit = this;
 	StateMachine->PushNewState(chaseState);
 }
 
