@@ -87,7 +87,6 @@ void UHighlightSystem::SetHoverTile(TObjectPtr<UTileBase> Tile)
 
 void UHighlightSystem::HighLightCreationTiles(ATeam* Team)
 {
-
 	for (const TObjectPtr<UHexTile_Creation> Tile : CreationTiles)
 	{
 		TObjectPtr<ATeam> TileTeam = Tile->GetOwningTeam();
