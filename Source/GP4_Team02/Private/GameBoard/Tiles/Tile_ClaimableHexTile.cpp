@@ -30,8 +30,11 @@ void UTile_ClaimableHexTile::ClaimTile(TObjectPtr<ATeam> NewClaimingTeam)
 void UTile_ClaimableHexTile::SetOccupyingUnit(AUnitBase* unit)
 {
 	Super::SetOccupyingUnit(unit);
-	if(unit)
+	
+	if (unit)
+	{
 		OnEnterClaimTile(unit->GetTeam() == ClaimingTeam);
+	}
 }
 
 void UTile_ClaimableHexTile::OnEnterClaimTile_Implementation(bool bIsAlreadyOwned)
