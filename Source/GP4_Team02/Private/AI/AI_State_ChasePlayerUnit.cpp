@@ -29,18 +29,18 @@ void UAI_State_ChasePlayerUnit::OnStateRunning()
 {
 	Super::OnStateRunning();
 
-	//if target is dead leave this state
-	if (!AI_Unit->GetTargetUnit() || !AI_Unit->GetTargetUnit()->IsUnitAlive())
+	//if enemy in range, push attack state
+	if (AI_Unit->CheckTargetInRange())
 	{
-		Machine->PopTopState();
+		TObjectPtr<UAI_State_Attack> attackState = NewObject<UAI_State_Attack>();
+		Machine->PushNewState(attackState);
 	}
 	else
 	{
-		//if enemy in range, push attack state
-		if (AI_Unit->CheckTargetInRange())
+		//if target is dead leave this state
+		if (!AI_Unit->GetTargetUnit() || !AI_Unit->GetTargetUnit()->IsUnitAlive())
 		{
-			TObjectPtr<UAI_State_Attack> attackState = NewObject<UAI_State_Attack>();
-			Machine->PushNewState(attackState);
+			Machine->PopTopState();
 		}
 		else
 		{
