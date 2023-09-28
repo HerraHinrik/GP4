@@ -178,8 +178,6 @@ TArray<TObjectPtr<ULink>> GameBoardUtils::FindPathInHexGrid(const TObjectPtr<UHe
 
 	// Early out if either start and end are null or if they are the same or if the node tiles array is empty
 	if (StartNode == nullptr || EndNode == nullptr || StartNode == EndNode ) return Path;
-	// Skip out if the end node is occupied
-	if (EndNode->GetOccupyingUnit()) return Path;
 
 	// Create Closed and Open
 	TSet<TObjectPtr<UHexTile>> Closed;
@@ -228,6 +226,15 @@ TArray<TObjectPtr<ULink>> GameBoardUtils::FindPathInHexGrid(const TObjectPtr<UHe
 			}	
 			// Return the path
 			Algo::Reverse(Path);
+			// Check if last links target is occupied and remove it if it is
+			if(Path.Num() > 0)
+			{
+				TObjectPtr<AUnitBase> Unit = Path[Path.Num()-1]->GetTarget()->GetOccupyingUnit();
+				if(Unit)
+				{
+					Path.Pop();
+				}
+			}
 			return Path;
 		}
 
@@ -237,7 +244,7 @@ TArray<TObjectPtr<ULink>> GameBoardUtils::FindPathInHexGrid(const TObjectPtr<UHe
 			// Cast the link target to a hex node and skip if the cast fails or if the neighbor is in the closed set
 			TObjectPtr<UHexTile> Neighbor = Cast<UHexTile>(Link->GetTarget());
 			if (!Neighbor) continue;
-			if(Neighbor->GetOccupyingUnit()) continue;
+			if(Neighbor->GetOccupyingUnit() && EndNode != Neighbor) continue;
 			if (Closed.Contains(Neighbor)) continue;
 
 			// Calculate the new G cost and update the neighbor if it's not in the open set

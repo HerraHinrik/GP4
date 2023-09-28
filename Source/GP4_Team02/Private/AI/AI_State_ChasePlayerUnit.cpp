@@ -4,6 +4,9 @@
 
 #include "AI/AI_StateMachine.h"
 #include "AI/AI_State_Attack.h"
+#include "GameBoard/GameBoard.h"
+#include "GameBoard/GameBoardUtils.h"
+#include "GameBoard/Link.h"
 #include "Units/Unit_Neutral.h"
 
 
@@ -40,7 +43,8 @@ void UAI_State_ChasePlayerUnit::OnStateRunning()
 		//if target is dead leave this state
 		if (AI_Unit->GetTargetUnit() && AI_Unit->GetTargetUnit()->IsUnitAlive())
 		{
-			AI_Unit->GetMoveAction()->StartAction(AI_Unit->GetTargetUnit()->GetCurrentTile(), AI_Unit);
+			TArray<TObjectPtr<ULink>> Path = GameBoardUtils::FindPathInHexGrid(AI_Unit->GetCurrentTile(), AI_Unit->GetTargetUnit()->GetCurrentTile());
+			AI_Unit->GetMoveAction()->StartAction(Path[0]->GetTarget(), AI_Unit);
 		}
 		else
 		{
