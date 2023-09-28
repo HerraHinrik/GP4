@@ -19,13 +19,14 @@ void UTWS_GameManager::OnWorldBeginPlay(UWorld& InWorld)
 	if (!board.IsEmpty() && board.Num() > 0)
 	{
 		bGameIntroTimerOn = true;
+		bGameEnded = false;
 	}
 }
 
 void UTWS_GameManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	if(bGameEnded) return;
 	GameIntro(DeltaTime);
 	TurnTimer(DeltaTime);
 }
@@ -244,6 +245,8 @@ void UTWS_GameManager::CheckForWin()
 			if(PlayerTeam->GetVictoryPoints() >= iVictoryPointsToWin)
 			{
 				OnGameEnded.Broadcast( PlayerTeam );
+				// Stop tick
+				bGameEnded = true;
 				return;
 			}
 		}

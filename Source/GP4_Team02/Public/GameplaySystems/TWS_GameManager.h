@@ -104,6 +104,8 @@ public:
 	FOnGameEnded OnGameEnded;
 	UPROPERTY( EditAnywhere, BlueprintReadWrite )
 	int32 iVictoryPointsToWin = 5;
+
+	bool bGameEnded = false;
 	
 UFUNCTION(BlueprintCallable)
 void EndTurn();
