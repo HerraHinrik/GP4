@@ -243,9 +243,7 @@ void UTWS_GameManager::CheckForWin()
 		{
 			if(PlayerTeam->GetVictoryPoints() >= iVictoryPointsToWin)
 			{
-				OnGameEnded.Broadcast();
-				FString Winner = PlayerTeam->GetTeamName();
-				GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, "Winner is: " + Winner);
+				OnGameEnded.Broadcast( PlayerTeam );
 				return;
 			}
 		}

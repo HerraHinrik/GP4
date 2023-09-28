@@ -1,5 +1,7 @@
 
 #include "Units/UnitAction.h"
+
+#include "GameplaySystems/PlayerCursor.h"
 #include "GameplaySystems/TWS_GameManager.h"
 #include "Units/UnitBase.h"
 
@@ -35,7 +37,11 @@ void UUnitAction::ExecuteAction()
 
 void UUnitAction::EndAction()
 {
+	// Consume action points
 	Action_Unit->ConsumeActionPoints(iActionCost);
+	// Select the target tile
+	Action_Unit->GetTeam()->GetPlayerCursor()->SetSelectedTile(Action_Unit->GetCurrentTile());
+
 	Action_Tile = nullptr;
 	Action_Unit = nullptr;
 	bCanPerformAction = true;

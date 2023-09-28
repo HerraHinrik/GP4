@@ -6,6 +6,8 @@
 #include "Units/UnitBase.h"
 #include "GameBoard/Tiles/HexTile.h"
 #include "GameBoard/Link.h"
+#include "GameplaySystems/PlayerCursor.h"
+#include "GameplaySystems/Team.h"
 
 void UMoveAction::StartAction(UTileBase* tile, AUnitBase* unit)
 {
@@ -61,6 +63,7 @@ void UMoveAction::ExecuteAction()
 		else // Reset timer and place unit on target tile
 		{
 			AGameBoard::PlaceUnitOnTile( Action_Unit, MoveLink->GetTarget() );
+			// Reset the movelink
 			MoveLink = nullptr;
 			ActionTimer = 0.0f;
 			iTilesMoved++;
@@ -71,7 +74,6 @@ void UMoveAction::ExecuteAction()
 
 void UMoveAction::EndAction()
 {
-
 	const int32 iStoredActionCost = iActionCost;
 	iActionCost *= iTilesMoved;
 	//reset cached values

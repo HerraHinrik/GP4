@@ -2,7 +2,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Team.h"
 #include "TeamPawn.h"
+#include "GameBoard/Tiles/TileBase.h"
 #include "PlayerCursor.generated.h"
 
 class ULink;
@@ -62,10 +64,17 @@ public:
 
 
 	TObjectPtr<ATeam> GetTeam() const { return myTeam; }
-	void SetTeam(TObjectPtr<ATeam> team) { myTeam = team; }
+	void SetTeam(TObjectPtr<ATeam> team) { myTeam = team; team->SetPlayerCursor(this); }
 	
-	TObjectPtr<AUnitBase> GetSelectedUnit() { return SelectedUnit; }
-	TObjectPtr<UTileBase> GetSelectedTile() { return SelectedTile; }
+	TObjectPtr<AUnitBase> GetSelectedUnit() const { return SelectedUnit; }
+	TObjectPtr<UTileBase> GetSelectedTile() const { return SelectedTile; }
+	void SetSelectedTile(const TObjectPtr<UTileBase> Tile)
+	{
+		if(SelectedTile)
+			SelectedTile->SelectTile(false);
+		SelectedTile = Tile;
+		SelectedTile->SelectTile(true);
+	}
 
 	virtual void CheckIfMyTurn() override;
 	

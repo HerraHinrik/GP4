@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "GameBoard.generated.h"
 
+class UHighlightSystem;
 class UHexTile_Influence;
 class UHexTile_Creation;
 class UTile_ClaimableHexTile;
@@ -20,8 +21,8 @@ class GP4_TEAM02_API AGameBoard : public AActor
 	GENERATED_BODY()
 	
 public:	
-
-
+	AGameBoard();
+	
 	// Place unit on tile
 	static bool PlaceUnitOnTile(AUnitBase* Unit, UTileBase* Tile);
 
@@ -72,6 +73,8 @@ public:
 	TArray<UHexTile*> NodeTiles;
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "GameManager")
 	float TurnTime = 40.0f;
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UHighlightSystem> HighlightSystem;
 
 	//---------------------------------------------------------------------------------------------------//
 	// Debug

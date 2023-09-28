@@ -2,6 +2,7 @@
 #include "GameBoard/GameBoard.h"
 #include "GameBoard/Tiles/HexTile.h"
 #include "GameBoard/GameBoardUtils.h"
+#include "GameBoard/HighlightSystem.h"
 #include "GameBoard/Tiles/HexTile_Creation.h"
 #include "GameBoard/Tiles/Tile_ClaimableHexTile.h"
 #include "GameBoard/Tiles/HexTile_Influence.h"
@@ -13,6 +14,11 @@
 #include "Debug/GameBoardDebug.h"
 #endif // !UE_BUILD_SHIPPING
 
+AGameBoard::AGameBoard()
+{
+	HighlightSystem = CreateDefaultSubobject<UHighlightSystem>(TEXT("HighlightSystem"));
+}
+
 void AGameBoard::BeginPlay()
 {
 	Super::BeginPlay();
@@ -20,12 +26,12 @@ void AGameBoard::BeginPlay()
 	GameManager->SetGameBoard(this);
 	GameManager->InitializeGame( TeamTypes );
 	GameManager->SetTurnMaxTime(TurnTime);
+	HighlightSystem->Init(GameManager);
 }
 
 void AGameBoard::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
-
 	// Clear board before constructing
 	ClearGameBoard();
 	

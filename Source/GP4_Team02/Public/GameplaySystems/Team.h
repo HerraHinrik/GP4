@@ -6,6 +6,7 @@
 #include "GameBoard/Tiles/TileBase.h"
 #include "Team.generated.h"
 
+class APlayerCursor;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUnitsChanged);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnVictoryPointsChanged);
 
@@ -38,6 +39,10 @@ public:
 	void AddClaimedTile(const TObjectPtr<UTile_ClaimableHexTile> Tile) { ClaimedTiles.Add(Tile); }
 	void RemoveClaimedTile(const TObjectPtr<UTile_ClaimableHexTile> Tile) { ClaimedTiles.Remove(Tile); }
 
+	// Get/Set Cursor
+	APlayerCursor* GetPlayerCursor() const { return PlayerCursor; }
+	void SetPlayerCursor(APlayerCursor* Cursor) { PlayerCursor = Cursor; }
+	
 public:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Team" )
 	FString TeamName = "NoName";
@@ -84,6 +89,8 @@ protected:
 
 	UPROPERTY( VisibleAnywhere, BlueprintReadWrite, Category = "TeamUnits" )
 	int32 iCreationPoints = 1000;
+
+	TObjectPtr<APlayerCursor> PlayerCursor;
 
 
 private:

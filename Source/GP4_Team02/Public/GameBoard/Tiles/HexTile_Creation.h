@@ -6,16 +6,25 @@
 #include "HexTile.h"
 #include "HexTile_Creation.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam( FOnHighLightCreation, bool, bClaimed );
 
-
-UCLASS(  )
+UCLASS()
 class GP4_TEAM02_API UHexTile_Creation : public UHexTile
 {
 	GENERATED_BODY()
 
 public:
 	void AddConnectedTile(const TObjectPtr<UHexTile_Creation> NewConnectedTile) { ConnectedTiles.Add(NewConnectedTile); }
+	void RemoveConnectedTile(const TObjectPtr<UHexTile_Creation> NewConnectedTile) { ConnectedTiles.Remove(NewConnectedTile); }
+	TSet<TObjectPtr<UHexTile_Creation>> GetConnectedTiles() const { return ConnectedTiles; }
 
+	void SetOwningTeam(const TObjectPtr<ATeam> NewOwningTeam) { OwningTeam = NewOwningTeam; }
+	TObjectPtr<ATeam> GetOwningTeam() const { return OwningTeam; }
+
+	UPROPERTY(BlueprintAssignable)
+	FOnHighLightCreation OnHighLightCreation;
+	
 private:
-		TSet<TObjectPtr<UHexTile_Creation>> ConnectedTiles;
+	TSet<TObjectPtr<UHexTile_Creation>> ConnectedTiles;
+	TObjectPtr<ATeam> OwningTeam;
 };
