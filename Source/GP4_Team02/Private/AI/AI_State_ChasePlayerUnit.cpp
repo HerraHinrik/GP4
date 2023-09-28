@@ -14,7 +14,7 @@ void UAI_State_ChasePlayerUnit::OnStateBegin()
 
 	if (AI_Unit)
 	{
-		if (AI_Unit->GetTargetUnit())
+		if (AI_Unit->GetTargetUnit() && AI_Unit->GetTargetUnit()->IsUnitAlive())
 		{
 			OnStateRunning();
 		}
@@ -30,7 +30,7 @@ void UAI_State_ChasePlayerUnit::OnStateRunning()
 	Super::OnStateRunning();
 
 	//if target is dead leave this state
-	if (!AI_Unit->GetTargetUnit())
+	if (!AI_Unit->GetTargetUnit() || !AI_Unit->GetTargetUnit()->IsUnitAlive())
 	{
 		Machine->PopTopState();
 	}

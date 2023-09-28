@@ -247,7 +247,7 @@ bool AUnit_Neutral::CheckTargetInRange()
 		return false;
 
 	//if the target made it to safety, stop chasing it
-	if (GetTargetUnit()->IsInSafeZone())
+	if (GetTargetUnit()->IsInSafeZone() || !GetTargetUnit()->IsUnitAlive())
 	{
 		TargetUnit = nullptr;
 		return false;		

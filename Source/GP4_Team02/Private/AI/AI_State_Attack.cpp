@@ -10,7 +10,7 @@ void UAI_State_Attack::OnStateBegin()
 	Super::OnStateBegin();
 	if (AI_Unit)
 	{
-		if (AI_Unit->GetTargetUnit())
+		if (AI_Unit->GetTargetUnit() && AI_Unit->GetTargetUnit()->IsUnitAlive())
 		{
 			OnStateRunning();
 		}
