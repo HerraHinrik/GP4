@@ -41,6 +41,7 @@ void UAttackAction::StartAction(UTileBase* tile, AUnitBase* unit)
 
 	//cache values
 	Super::StartAction(tile, unit);
+	moveLink = startTile->GetLinkTo(tile);
 	Action_TimerDelegate.BindUFunction(this, FName("ExecuteAction"));
 	GetWorld()->GetTimerManager().SetTimerForNextTick(Action_TimerDelegate);
 
@@ -51,6 +52,12 @@ void UAttackAction::StartAction(UTileBase* tile, AUnitBase* unit)
 
 void UAttackAction::ExecuteAction()
 {
+	if (!moveLink)
+	{
+		targetEnemy->ReceiveDamage(Action_Unit->iAttackDamage);
+		EndAction();
+		return;
+	}
 	FVector TargetLocation;
 	FVector StartLocation = Action_Unit->GetActorLocation();
 	float Alpha = 0.0f;
@@ -66,7 +73,7 @@ void UAttackAction::ExecuteAction()
 			{
 				if ( ActionTimer < ActionTime * 0.25f )
 				{
-					TargetLocation = Action_Tile->GetWorldLocation();
+					TargetLocation = moveLink->GetTarget()->GetWorldLocation();
 					StartLocation += FVector(0.0f, 0.0f, Action_Unit->fHeightOffset);
 					Alpha = ActionTimer / (ActionTime * 0.25f);
 				}else
@@ -81,7 +88,7 @@ void UAttackAction::ExecuteAction()
 			}
 			else // Already done damage -> Move back to start tile
 			{
-				TargetLocation = Action_Unit->GetCurrentTile()->GetWorldLocation();
+				TargetLocation = moveLink->GetSource()->GetWorldLocation();
 				StartLocation += FVector(0.0f, 0.0f, Action_Unit->fHeightOffset / 5.0f);
 				Alpha = (ActionTimer - ActionTime * 0.25f) / (ActionTime * 0.75f);
 			}
@@ -96,12 +103,6 @@ void UAttackAction::ExecuteAction()
 		}
 	}else if(targetEnemy && !targetEnemy->IsUnitAlive()) // if target enemy is dead
 	{
-		moveLink = Action_Unit->GetCurrentTile()->GetLinkTo(Action_Tile);
-		if (!moveLink)
-		{
-			EndAction();
-			return;
-		}
 		// Move to their tile
 		if ( ActionTimer < ActionTime )
 		{
