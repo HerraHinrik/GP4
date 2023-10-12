@@ -55,7 +55,7 @@ bool APlayerCursor::SelectUnit(TObjectPtr<UTileBase> Tile)
 
 bool APlayerCursor::SelectTile(TObjectPtr<UTileBase> Tile)
 {
-		if (Tile)
+		if (Tile && bIsMyTurn)
 		{
 
 			// If we have a previous selected tile, deselect it
